@@ -21,6 +21,8 @@
 
 using namespace std;
 
+
+
 // TODO: Temporary home. Not sure if this this the best place to put this.
 struct WalkVelocity
 {
@@ -103,6 +105,7 @@ protected:
     VecPosition kickDirection;
     int kickType;
     VecPosition kickTarget;
+    float time_initial;
 
     double lastGetupRecoveryTime;
 
@@ -227,7 +230,16 @@ protected:
     void getSkillsForKickType(int kickType, SkillType skillsForType[]);
 
     SkillType demoKickingCircle();
-
+    SkillType threemanpass();
+    SkillType kickoff();
+    SkillType testing();
+    SkillType attackplay();
+    SkillType defenseplay();
+    SkillType stay();
+    SkillType kickin();
+    SkillType kickin_opp();
+    SkillType moveToOff();
+    void calcpos();
 public:
 
     NaoBehavior(const std::string teamName, int uNum, const map<string, string>& namedParams_, const string& rsg_);

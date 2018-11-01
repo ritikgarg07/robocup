@@ -16,7 +16,7 @@ WorldModel::WorldModel() {
     uNum = 1;//dummy
     uNumSet = false;
 
-    side = SIDE_LEFT;//dummy
+    side = SIDE_RIGHT;//dummy
     sideSet = false;
 
     lastSkills.push_back( SKILL_STAND ) ;//dummy
