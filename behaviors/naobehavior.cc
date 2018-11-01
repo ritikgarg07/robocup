@@ -17,14 +17,11 @@
 extern int agentBodyType;
 
 
-
-
-
-
 /*
  * namedParams_ are a mapping between parameters and their values
  */
-NaoBehavior::NaoBehavior(const std::string teamName, int uNum, const map<string, string>& namedParams_, const string& rsg_) :
+NaoBehavior::
+NaoBehavior(const std::string teamName, int uNum, const map<string, string>& namedParams_, const string& rsg_) :
     namedParams( namedParams_ ),
     rsg( rsg_ )
 {
@@ -38,6 +35,7 @@ NaoBehavior::NaoBehavior(const std::string teamName, int uNum, const map<string,
 
     mInit = false;
     initBeamed = false;
+
 
     agentTeamName = teamName;
     agentUNum = uNum;
@@ -95,27 +93,35 @@ NaoBehavior::NaoBehavior(const std::string teamName, int uNum, const map<string,
     try {
         readSkillsFromFile( "./skills/stand.skl" );
         readSkillsFromFile( "./skills/kick.skl" );
-        /*switch(agentBodyType)
-        {
-            case 0: readSkillsFromFile( "./skills/kickbottype0.skl");
+        /*switch(uNum){
+            case 1: readSkillsFromFile( "./skills/kickbottype0.skl" );
                     break;
-            case 1: readSkillsFromFile( "./skills/kickbottype1.skl");
+            case 2: readSkillsFromFile( "./skills/kickbottype0.skl" );
                     break;
-            case 2: readSkillsFromFile( "./skills/kickbottype2.skl");
+            case 3: readSkillsFromFile( "./skills/kickbottype1.skl" );
                     break;
-            case 3: readSkillsFromFile( "./skills/kickbottype3.skl");
+            case 4: readSkillsFromFile( "./skills/kickbottype1.skl" );
                     break;
-            case 4: readSkillsFromFile( "./skills/kickbottype4.skl");
+            case 5: readSkillsFromFile( "./skills/kickbottype2.skl" );
                     break;
-            default:readSkillsFromFile( "./skills/kick.skl" );
-                    break; 
-        }
-        */
-        
-        // ik skills
-        readSkillsFromFile( "./skills/kick_ik_0.skl" );
-        // end ik skills
+            case 6: readSkillsFromFile( "./skills/kickbottype2.skl" );
+                    break;
+            case 7: readSkillsFromFile( "./skills/kickbottype3.skl" );
+                    break;
+            case 8: readSkillsFromFile( "./skills/kickbottype3.skl" );
+                    break;
+            case 9: readSkillsFromFile( "./skills/kickbottype4.skl" );
+                    break;
+            case 10: readSkillsFromFile( "./skills/kickbottype4.skl" );
+                    break;
+            case 11: readSkillsFromFile( "./skills/kickbottype4.skl" );
+                    break;
 
+        }*/
+        
+
+        // ik skills
+        readSkillsFromFile("./skills/kick_ik_0.skl");
     }
     catch( std::string& what ) {
         cerr << "Exception caught: " << what << endl;
@@ -310,7 +316,7 @@ string NaoBehavior::Think(const std::string& message) {
 }
 
 void NaoBehavior::act() {
-   refresh();
+    refresh();
 
     const double LAST_LINE_SIGHTING_THRESH = 0.1;
     if (worldModel->getTime()-worldModel->getLastLineSightingTime() > LAST_LINE_SIGHTING_THRESH) {
@@ -344,12 +350,11 @@ void NaoBehavior::act() {
         velocity.paramSet = WalkRequestBlock::PARAMS_DEFAULT;
     }
     else {
-        if(skills[skill]->done(bodyModel, worldModel) ||
+        if(skills[skill]->done( bodyModel, worldModel) ||
                 bodyModel->useOmniWalk()) {
             skills[skill]->reset();
             resetScales();
             SkillType currentSkill = selectSkill();
-            
 
 
             if (currentSkill != SKILL_WALK_OMNI) {
@@ -379,7 +384,6 @@ void NaoBehavior::act() {
 
                 SkillType lastSkill = worldModel->getLastSkill();
                 skill = currentSkill;
-
 
 
             }
@@ -906,10 +910,10 @@ SkillType NaoBehavior::goToTarget(const VecPosition &target) {
 
     // Turn to the angle we want to walk in first, since we want to walk with
     // maximum forwards speeds if possible.
-    if (abs(angle) > angleThreshold)
+    /*if (abs(angle) > angleThreshold)
     {
-    return goToTargetRelative(relativeTarget, angle);
-    }
+    return goToTargetRelative(VecPosition(), angle);
+    }*/
 
     // [patmac] Speed/quickness adjustment
     // For now just go full speed in the direction of the target and also turn

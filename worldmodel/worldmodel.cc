@@ -3,7 +3,6 @@
 #include "../kalman/PlayerKF.h"
 
 WorldModel::WorldModel() {
-
     cycle = 0;
     scoreLeft = -1;
     scoreRight = -1;
@@ -16,7 +15,7 @@ WorldModel::WorldModel() {
     uNum = 1;//dummy
     uNumSet = false;
 
-    side = SIDE_RIGHT;//dummy
+    side = SIDE_LEFT;//dummy
     sideSet = false;
 
     lastSkills.push_back( SKILL_STAND ) ;//dummy
@@ -83,6 +82,15 @@ WorldModel::WorldModel() {
     for (unsigned int i = 0; i < NUM_AGENTS; i++) {
         setTeammateLastHeardTime(i, -1);
     }
+
+    if(uNum == 1 || uNum == 2){
+        whichSide = true;
+    }
+    if(uNum ==3){
+        whichSide = false;
+    }
+    currentState = 1;
+    prevState = 1;
 }
 
 WorldModel::~WorldModel() {
