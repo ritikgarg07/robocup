@@ -57,16 +57,16 @@ void NaoBehavior::beam( double& beamX, double& beamY, double& beamAngle ) {
             beamY = 0;
             break;
         case LEFT_DEF:
-            beamX = -10;
-            beamY = 8;
+            beamX = -12;
+            beamY = 3;
             break;
         case LEFT_C_DEF:
             beamX = -10;
             beamY = 4;
             break;
         case RIGHT_DEF:
-            beamX = -10;
-            beamY = -8;
+            beamX = -12;
+            beamY = -3;
             break;
         case RIGHT_C_DEF:
             beamX = -10;
@@ -163,8 +163,8 @@ SkillType NaoBehavior::selectSkill()
     // return demoKickingCircle();
     // return threemanpass();
     // return testing();
-    // return football();
-    /*if(worldModel->getUNum() == LEFT_FORWARD)
+    // return football()
+   ; /*if(worldModel->getUNum() == LEFT_FORWARD)
     {
         std::cout << LEFT_FORWARD << " " << WO_TEAMMATE1 << " ";
         std::cout << worldModel->getUNum() << "\n";
@@ -182,18 +182,47 @@ SkillType NaoBehavior::selectSkill()
         return kickin();
     }
 
-    /*
-    else if((worldModel->getPlayMode() == PM_KICK_IN_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel-)getPlayMode() == PM_KICK_IN_LEFT && worldModel->getSide() == SIDE_RIGHT)
+    else if((worldModel->getPlayMode() == PM_KICK_IN_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_IN_LEFT && worldModel->getSide() == SIDE_RIGHT))
         return kickin_opp();
-    */
+    
 
-    else if(worldModel->getBall().getX() > 2) // change 2?
-        return attackplay();
-    else return defenseplay();
+    
+    return attackplay();
 }
 
 SkillType NaoBehavior::testing()
 { 
+    // Find closest player to ball
+    int playerClosestToBall = -1;
+    double closestDistanceToBall = 10000;
+    for(int jj = WO_TEAMMATE1; jj < WO_TEAMMATE1+NUM_AGENTS; ++jj) 
+    {
+        VecPosition temp;
+        int playerNum = jj - WO_TEAMMATE1 + 1;
+        if (worldModel->getUNum() == playerNum) {
+            // This is us
+            temp = worldModel->getMyPosition();
+        } else {
+            WorldObject* teammate = worldModel->getWorldObject( jj );
+            if (teammate->validPosition) {
+                temp = teammate->pos;
+            } else {
+                continue;
+            }
+        }
+        temp.setZ(0);
+
+        double distanceToBall = temp.getDistanceTo(ball);
+        if (distanceToBall < closestDistanceToBall) {
+            playerClosestToBall = playerNum;
+            closestDistanceToBall = distanceToBall;
+        }
+    }
+    /***********************************/
+    if(worldModel->getUNum() == playerClosestToBall)
+    {
+        return kickBall(KICK_DRIBBLE, VecPosition(15,0,0));
+    }
     return SKILL_STAND;
 }
 
@@ -206,7 +235,7 @@ SkillType NaoBehavior::kickoff()
 {
     if (worldModel->getUNum() == CENTRE_FORWARD)
         return kickBall(KICK_FORWARD, VecPosition(-5,6,0)); //change initial kick position
-    else SKILL_STAND;
+    else return SKILL_STAND;
 }
 
 SkillType NaoBehavior::attackplay()
@@ -241,61 +270,17 @@ SkillType NaoBehavior::attackplay()
     if(worldModel->getUNum() == playerClosestToBall)
     {
         // on-ball player
-        if ((me.getDistanceTo(VecPosition(15,0,0))) < 4.5)     // see 4.5?
-            return kickBall(KICK_FORWARD,VecPosition(15,0,0));
+        if ((me.getDistanceTo(goal) < 3))     // change value?
+            return kickBall(KICK_FORWARD,goal);
         else 
-            return kickBall(KICK_DRIBBLE, VecPosition(15,0,0)); //or passing?
-        /*    
-            calcpos();
-            return kickball(KICK_FORWARD,targpos[?????])
-        */     
+            return kickBall(KICK_DRIBBLE, goal); 
+        // or return dribble
+        // return SKILL_STAND;     // temporary
     }
     else 
-    {
-        return moveToOff();          // determine way to get position 
-        //return SKILL_STAND;                     // temporary    
+    { 
+        return moveToOff();                     
     }
-    /*
-    switch(worldModel->getUNum())
-    {
-        case LEFT_FORWARD:
-            defaultpos = VecPosition(8,5,0);
-            break;
-        case RIGHT_FORWARD:
-            defaultpos = VecPosition(8,-5,0);
-            break;
-        case CENTRE_FORWARD:
-            defaultpos = VecPosition(7,0,0);
-            break;
-        case LEFT_MID:
-            defaultpos = VecPosition(1,5,0);
-            break;
-        case RIGHT_MID:
-            defaultpos = VecPosition(1,-5,0);
-            break;
-        case CENTRE_MID:
-            defaultpos = VecPosition(0,0,0);
-            break;
-        case LEFT_DEF:
-            defaultpos = VecPosition(-7,6,0);
-            break;
-        case LEFT_C_DEF:
-            defaultpos = VecPosition(-5,4,0);
-            break;
-        case RIGHT_DEF:
-            defaultpos = VecPosition(-7,-6,0);
-            break;
-        case RIGHT_C_DEF:
-            defaultpos = VecPosition(-5,-4,0);
-            break;
-        case GOALKEEPER:
-            defaultpos = VecPosition(-14,0,0);
-            break;
-        default: 
-            defaultpos = VecPosition(0,0,0);
-            break;
-    }
-    */
 }
 
 SkillType NaoBehavior::kickin()
@@ -329,15 +314,14 @@ SkillType NaoBehavior::kickin()
     /***********************************/
     if (worldModel->getUNum() == playerClosestToBall)
     {
-        return kickBall(KICK_FORWARD, VecPosition(15,0,0)); //change vecposition to position of teammmate
+        return kickBall(KICK_FORWARD, goal);  //change vecposition to position of teammmate
     }  
-    return moveToOff();         // change to go to position
+    return moveToOff();    
 }
 
 SkillType NaoBehavior::kickin_opp()
 {
-    // return SKILL_STAND;
-    return moveToOff(); //position of opponents (to block)
+    return moveToOff();          //change to go to position of opponents (to block)
 }
 
 SkillType NaoBehavior::defenseplay()
@@ -369,14 +353,102 @@ SkillType NaoBehavior::defenseplay()
         }
     }
     /***********************************/
+
     if(worldModel->getUNum() == playerClosestToBall)
     {
         // on-ball player
         // goToTarget(ball);
-        return kickBall(KICK_FORWARD, VecPosition(15,0,0));
+        return kickBall(KICK_FORWARD,goal);
     }
     else return moveToOff();
 }
+
+VecPosition targpos[11];
+
+SkillType NaoBehavior::moveToOff()
+{
+   //make an array to store the targets
+   //these will be decided based on the ball and the boundaries
+   //init target array
+
+   // change code here to set the positions
+   /*targpos[0]= ball;
+   double GKx = 10;
+   VecPosition goalCentre = Vecposition(-15, 0, 0);
+   Vecposition temp = (ball +(GKx*goalCentre))/(1+GKx);
+   targpos[1] = temp;// GK i want this to move in a circle but be in the middle of the ball and the centre of the goal
+   dobule CBx = 8;
+   Vecposition temp = (ball +(CBx*goalCentre))/(1+CBx);
+   targpos[2] = temp; //defender centre back, same as GK but further away from the goal
+   targpos[3] = ; //defender cntre right
+   targpos[4] = ; //defender centre left
+   targpos[5] = ; //mid back lefft
+   targpos[6] = ; //mid back right
+   targpos[7] = ; //midright
+   targpos[8] = ; //mid left
+   targpos[9] = ; //forward left
+   targpos[10] = ; //foward right
+*/
+    for (int ii = 3;ii <11;ii++)
+    {
+        targpos[ii] = ball;
+    }
+    targpos[0] = VecPosition(-14.5,0,0);
+    targpos[1] = VecPosition(-14.5,0.85,0);
+    targpos[2] = VecPosition(-14.5,-0.85,0);
+
+
+    //int factGK = 10;
+    //VecPosition ourgoal = VecPosition(-15,0,0);
+    //VecPosition target_gk = ((ball + (ourgoal*factGK))*(1/(1+factGK)));
+    //VecPosition target_gk = VecPosition(-14,0,0);
+    //target_gk.setY(ball.getY()/(1+factGK)); 
+    //modify the code to target the two(or three?) "most dangerous" then change targets of the bots nearest to the dangerous positions to the dangerous positons
+    //for(int i = WO_OPPONENT1; i < WO_OPPONENT1+)
+
+   VecPosition teampos[11];
+   for(int i = WO_TEAMMATE1; i < WO_TEAMMATE1+NUM_AGENTS; i++){
+       WorldObject* teammate = worldModel->getWorldObject( i );
+       teampos[i-WO_TEAMMATE1] = teammate->pos;
+   }
+   //one position is on ball
+   Test t;
+   for(int i = 0; i < NUM_AGENTS; ++i)
+   {
+       t.starts.push_back(std::make_pair(teampos[i].getX(), teampos[i].getY()));
+       t.targets.push_back(std::make_pair(targpos[i].getX(), targpos[i].getY()));
+   }
+
+   std::vector<Edge> ansVector = SOLVER(t);
+
+   int selfindex = (worldModel->getUNum()-1);
+
+   if(worldModel->getMyPosition().getDistanceTo(targpos[ansVector[selfindex].second.second]) < 0.50){
+       return SKILL_STAND;
+   }
+   VecPosition target;
+   if (worldModel->getUNum() == GOALKEEPER)
+   {
+    target = targpos[0];
+   }
+   else if(worldModel->getUNum() == LEFT_DEF)
+   {
+    target = targpos[1];
+   }
+   else if(worldModel->getUNum() == RIGHT_DEF)
+   {
+    target = targpos[2];
+   }
+   else
+   {
+    target = targpos[ansVector[selfindex].second.second];
+    target = collisionAvoidance(true /*teammate*/, false/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+   }
+   return goToTarget(target);
+}
+
+//should I have a different function for moveToDeff?
+//how to work on passes?
 
 SkillType NaoBehavior::threemanpass() 
 {
@@ -650,6 +722,7 @@ SkillType NaoBehavior::demoKickingCircle()
         else if (me.getDistanceTo(target) < .5) 
         {
             // Close to desired position so start turning to face center
+
             return goToTargetRelative(worldModel->g2l(target), localCenterAngle);
         }
         else 
@@ -659,73 +732,3 @@ SkillType NaoBehavior::demoKickingCircle()
         }
     }
 }
-
-VecPosition targpos[11];
-
-void NaoBehavior::calcpos()
-{
-    for (int ii = 0;ii <11;++ii)
-    {
-        targpos[ii] = ball;
-    }
-}
-SkillType NaoBehavior::moveToOff()
-{
-   //make an array to store the targets
-   //these will be decided based on the ball and the boundaries
-   //init target array
-
-   // change code here to set the positions
-   /*targpos[0]= ball;
-   double GKx = 10;
-   VecPosition goalCentre = Vecposition(-15, 0, 0);
-   Vecposition temp = (ball +(GKx*goalCentre))/(1+GKx);
-   targpos[1] = temp;// GK i want this to move in a circle but be in the middle of the ball and the centre of the goal
-   dobule CBx = 8;
-   Vecposition temp = (ball +(CBx*goalCentre))/(1+CBx);
-   targpos[2] = temp; //defender centre back, same as GK but further away from the goal
-   targpos[3] = ; //defender cntre right
-   targpos[4] = ; //defender centre left
-   targpos[5] = ; //mid back lefft
-   targpos[6] = ; //mid back right
-   targpos[7] = ; //midright
-   targpos[8] = ; //mid left
-   targpos[9] = ; //forward left
-   targpos[10] = ; //foward right
-*/
-    for (int ii = 0;ii <11;ii++)
-    {
-        targpos[ii] = ball;
-    }
-   //modify the code to target the two(or three?) "most dangerous" then change targets of the bots nearest to the dangerous positions to the dangerous positons
-   //for(int i = WO_OPPONENT1; i < WO_OPPONENT1+)
-   /********************************************************/
-   VecPosition teampos[11];
-   for(int i = WO_TEAMMATE1; i < WO_TEAMMATE1+NUM_AGENTS; i++){
-       WorldObject* teammate = worldModel->getWorldObject( i );
-       teampos[i-WO_TEAMMATE1] = teammate->pos;
-   }
-   //one position is on ball
-   Test t;
-   for(int i = 0; i < NUM_AGENTS; ++i)
-   {
-       t.starts.push_back(std::make_pair(teampos[i].getX(), teampos[i].getY()));
-       t.targets.push_back(std::make_pair(targpos[i].getX(), targpos[i].getY()));
-   }
-
-   std::vector<Edge> ansVector = SOLVER(t);
-
-   int selfindex = (worldModel->getUNum()-1);
-
-   if(worldModel->getMyPosition().getDistanceTo(targpos[ansVector[selfindex].second.second]) < 0.50){
-       return SKILL_STAND;
-   }
-   /********************************************************/
-   VecPosition target = targpos[ansVector[selfindex].second.second];
-   target = collisionAvoidance(true /*teammate*/, false/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
-   return goToTarget(target);
-
-}
-
-//should I have a different function for moveToDeff?
-//how to work on passes?
