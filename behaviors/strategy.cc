@@ -732,3 +732,19 @@ SkillType NaoBehavior::demoKickingCircle()
         }
     }
 }
+
+
+
+
+// assuming an array of fedit2 based positions
+/*
+    algo to determine which triangle is the ball in
+    returns/changes vecposition a, b, c to the vertices of the triangle
+    a,b,c are the ball positions of those triangles
+
+*/
+Vecposition a = (0,0,0);        
+VecPosition b = (5,0,0);
+VecPosition c = (0,5,0);
+VecPosition d = worldModel->getMyPosition();
+
