@@ -192,37 +192,6 @@ SkillType NaoBehavior::selectSkill()
 
 SkillType NaoBehavior::testing()
 { 
-    // Find closest player to ball
-    int playerClosestToBall = -1;
-    double closestDistanceToBall = 10000;
-    for(int jj = WO_TEAMMATE1; jj < WO_TEAMMATE1+NUM_AGENTS; ++jj) 
-    {
-        VecPosition temp;
-        int playerNum = jj - WO_TEAMMATE1 + 1;
-        if (worldModel->getUNum() == playerNum) {
-            // This is us
-            temp = worldModel->getMyPosition();
-        } else {
-            WorldObject* teammate = worldModel->getWorldObject( jj );
-            if (teammate->validPosition) {
-                temp = teammate->pos;
-            } else {
-                continue;
-            }
-        }
-        temp.setZ(0);
-
-        double distanceToBall = temp.getDistanceTo(ball);
-        if (distanceToBall < closestDistanceToBall) {
-            playerClosestToBall = playerNum;
-            closestDistanceToBall = distanceToBall;
-        }
-    }
-    /***********************************/
-    if(worldModel->getUNum() == playerClosestToBall)
-    {
-        return kickBall(KICK_DRIBBLE, VecPosition(15,0,0));
-    }
     return SKILL_STAND;
 }
 
@@ -267,62 +236,18 @@ SkillType NaoBehavior::attackplay()
         }
     }
     /***********************************/
+    
     if(worldModel->getUNum() == playerClosestToBall)
     {
-        // on-ball player
-        if ((me.getDistanceTo(VecPosition(15,0,0))) < 2)     // see 4.5?
+        if ((me.getDistanceTo(VecPosition(15,0,0))) < 3)     // see 4.5?
             return kickBall(KICK_FORWARD,VecPosition(15,0,0));
         else 
             return kickBall(KICK_DRIBBLE, VecPosition(15,0,0)); 
-        // or return dribble
-        // return SKILL_STAND;     // temporary
     }
     else 
-    {
-        //return goToTarget(position);          // determine way to get position 
-        return moveToOff();                     // temporary    
+    { 
+        return moveToOff();    
     }
-    /*
-    switch(worldModel->getUNum())
-    {
-        case LEFT_FORWARD:
-            defaultpos = VecPosition(8,5,0);
-            break;
-        case RIGHT_FORWARD:
-            defaultpos = VecPosition(8,-5,0);
-            break;
-        case CENTRE_FORWARD:
-            defaultpos = VecPosition(7,0,0);
-            break;
-        case LEFT_MID:
-            defaultpos = VecPosition(1,5,0);
-            break;
-        case RIGHT_MID:
-            defaultpos = VecPosition(1,-5,0);
-            break;
-        case CENTRE_MID:
-            defaultpos = VecPosition(0,0,0);
-            break;
-        case LEFT_DEF:
-            defaultpos = VecPosition(-7,6,0);
-            break;
-        case LEFT_C_DEF:
-            defaultpos = VecPosition(-5,4,0);
-            break;
-        case RIGHT_DEF:
-            defaultpos = VecPosition(-7,-6,0);
-            break;
-        case RIGHT_C_DEF:
-            defaultpos = VecPosition(-5,-4,0);
-            break;
-        case GOALKEEPER:
-            defaultpos = VecPosition(-14,0,0);
-            break;
-        default: 
-            defaultpos = VecPosition(0,0,0);
-            break;
-    }
-    */
 }
 
 SkillType NaoBehavior::kickin()
@@ -364,7 +289,6 @@ SkillType NaoBehavior::kickin()
 SkillType NaoBehavior::kickin_opp()
 {
     return moveToOff();
-    // return goToTarget() //position of opponents (to block)
 }
 
 SkillType NaoBehavior::defenseplay()
@@ -775,3 +699,5 @@ SkillType NaoBehavior::demoKickingCircle()
     }
 }
 
+
+    
