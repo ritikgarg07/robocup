@@ -1,0 +1,5 @@
+1) use new kicks
+2) counter-passing
+3) adjust kick position based on gk position
+4) defense : dangerous player marking
+5) attack
