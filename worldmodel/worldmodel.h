@@ -27,6 +27,10 @@ private:
     int lastDifferentPlayMode;
     int uNum;
     int side;
+    //made by meeeeeee
+    bool whichSide;
+    int currentState;
+    int prevState;
 
     bool uNumSet;
     bool sideSet;
@@ -90,9 +94,11 @@ public:
         return confident;
     }
 
+
     inline WorldObject* getWorldObject( int index ) {
         return &worldObjects[index];
     }
+    
     void updateGoalPostsAndFlags();
     void updateMatricesAndMovingObjs( VecPosition& fieldXPlusYPlus,
                                       VecPosition& fieldXPlusYMinus,
@@ -111,8 +117,24 @@ public:
     inline VecPosition getMyPosition() const {
         return myPosition;
     }
-
-
+    inline void setwhichSide(bool lala){
+        whichSide = lala;
+    }
+    inline bool getwhichSide(){
+        return whichSide;
+    }
+    inline int getcurrentState(){
+        return currentState;
+    }
+    inline void setcurrentState(int i){
+        currentState = i;
+    }
+    inline int getprevState(){
+        return prevState;
+    }
+    inline void setprevState(int i){
+        prevState = i;
+    }
     inline void setMyAngDeg( SIM::AngDeg newAng ) {
         myAngDegrees = newAng;
     }

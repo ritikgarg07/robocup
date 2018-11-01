@@ -57,11 +57,11 @@ set(CORE_FILES
 set(SRCS
   main.cc 
   behaviors/behavior.cc
+  behaviors/scram.cc
   behaviors/naobehavior.cc
   behaviors/checkfall.cc 
   behaviors/kicking.cc 
   behaviors/strategy.cc
-  behaviors/scram.cc
   behaviors/pkbehaviors.cc
   behaviors/gazebobehavior.cc
   servercomm/primitives.cc

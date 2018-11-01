@@ -3,6 +3,7 @@
 
 
 #include "../math/vecposition.h"
+
 struct VisionObject {
 
     VisionObject( double r, double theta, double phi, int id_ ) {
