@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# UT Austin Villa start script for 3D Simulation Competitions
+#  UT Austin Villa start script for 3D Simulation Competitions
 #
 
 
@@ -9,7 +9,7 @@ BINARY_DIR="."
 LIBS_DIR="./libs"
 NUM_PLAYERS=11
 
-team="Ritik"
+team="DrunkSoccer"
 host="localhost"
 port=3100
 paramsfile=paramfiles/defaultParams.txt
