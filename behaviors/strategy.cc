@@ -244,7 +244,6 @@ SkillType NaoBehavior::attackplay()
     for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
     {
         VecPosition temp;
-        int playerNum = jj - WO_OPPONENT1 + 1;
         WorldObject* opponent = worldModel->getWorldObject( jj );
         if (opponent->validPosition) 
         {
@@ -258,7 +257,7 @@ SkillType NaoBehavior::attackplay()
         double distanceToGoal = temp.getDistanceTo(VecPosition(15,0,0));
         if (distanceToGoal < closestDistanceToGoal) 
         {
-            opponentClosestToGoal = playerNum;
+            opponentClosestToGoal = jj;
             closestDistanceToGoal = distanceToGoal;
         }
     }
@@ -293,7 +292,7 @@ SkillType NaoBehavior::attackplay()
 
 SkillType NaoBehavior::kickin()
 {
-  // Find closest player to ball
+    // Find closest player to ball
     int playerClosestToBall = -1;
     double closestDistanceToBall = 10000;
     for(int jj = WO_TEAMMATE1; jj < WO_TEAMMATE1+NUM_AGENTS; ++jj) 
