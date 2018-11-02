@@ -306,7 +306,7 @@ SkillType NaoBehavior::attackplay()
 
     if(worldModel->getUNum() == playerClosestToBall)
     {
-        if ((me.getDistanceTo(VecPosition(15,0,0))) < 3)    // see 4.5?
+        if ((me.getDistanceTo(VecPosition(15,0,0))) < 5)    // see 4.5?
         {
             VecPosition temp = (16,0,0);
             temp.setY(temp.getY() + offset);
