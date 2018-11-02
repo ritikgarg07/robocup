@@ -308,8 +308,8 @@ SkillType NaoBehavior::attackplay()
     {
         if ((me.getDistanceTo(VecPosition(15,0,0))) < 5)    // see 4.5?
         {
-            VecPosition temp = (16,0,0);
-            temp.setY(temp.getY() + offset);
+            VecPosition temp = VecPosition(16,0,0);
+            temp.setY(offset);
             return kickBall(KICK_FORWARD,temp);
         }              
         else 
