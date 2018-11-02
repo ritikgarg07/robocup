@@ -553,7 +553,7 @@ SkillType NaoBehavior::moveToOff()
         }
     }
 
-    if(worldModel->getUNum() == WO_TEAMMATE5)
+    if(worldModel->getUNum() == WO_TEAMMATE6)
     {
         target = targpos[tt];
     }
