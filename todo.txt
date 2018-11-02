@@ -1,5 +1,4 @@
-1) use new kicks
-2) counter-passing
-3) adjust kick position based on gk position
-4) defense : dangerous player marking
-5) attack
+1) use new kicks       							ritik
+2) counter-passing	(dangerous player)			aryaman				
+3) adjust kick position based on gk position	ritik	done
+4) wing pass(ATTACK)
