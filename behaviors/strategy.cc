@@ -215,7 +215,7 @@ SkillType NaoBehavior::selectSkill()
     {
         return defenseplay();
     }
-    else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5)   // change 5
+    else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 9)   // change 5
     {
         return defenseplay();
     }
@@ -402,11 +402,11 @@ SkillType NaoBehavior::defenseplay()
     {
         return goToTarget(ball);
     }
-    else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 7 && worldModel->getUNum() == RIGHT_DEF)
+    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 7 && worldModel->getUNum() == RIGHT_DEF)
     {
         return goToTarget(ball);
     }
-    else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5 && worldModel->getUNum() == GOALKEEPER)
+    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5 && worldModel->getUNum() == GOALKEEPER)
     {
         return kickBall(KICK_FORWARD, VecPosition(15,0,0));
     }
