@@ -184,6 +184,37 @@ SkillType NaoBehavior::selectSkill()
 
     else if((worldModel->getPlayMode() == PM_KICK_IN_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_IN_LEFT && worldModel->getSide() == SIDE_RIGHT))
         return kickin_opp();
+    else if((worldModel->getPlayMode() == PM_GOAL_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_GOAL_KICK_RIGHT && worldModel->getSide() == SIDE_RIGHT))
+    {
+        if (worldModel->getUNum() == GOALKEEPER)
+        {
+            return kickBall(KICK_FORWARD, VecPosition(15,0,0));
+        }
+        else 
+            return moveToOff();
+    }
+    else if((worldModel->getPlayMode() == PM_CORNER_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || worldModel->getPlayMode() == PM_CORNER_KICK_RIGHT && worldModel->getSide() == SIDE_RIGHT)
+    {
+        if (worldModel->getUNum() == LEFT_FORWARD)
+        {
+            return kickBall(KICK_FORWARD, VecPosition(12,0,0));          // change vecposition to someplace else?
+        }
+        else if(worldModel->getUNum() == RIGHT_FORWARD)
+            return goToTarget(VecPosition(13,0,0));
+        else return moveToOff();
+    }
+    else if((worldModel->getPlayMode() == PM_CORNER_KICK_LEFT && worldModel->getSide() == SIDE_RIGHT) || worldModel->getPlayMode() == PM_CORNER_KICK_RIGHT && worldModel->getSide() == SIDE_LEFT)
+    {
+        return defenseplay();
+    }
+    else if((worldModel->getPlayMode() == PM_FREE_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_FREE_KICK_RIGHT &&worldModel->getSide() == SIDE_RIGHT))
+    {
+        return attackplay();
+    }
+    else if((worldModel->getPlayMode() == PM_FREE_KICK_LEFT && worldModel->getSide() == SIDE_RIGHT) || (worldModel->getPlayMode() == PM_FREE_KICK_RIGHT && worldModel->getSide() == SIDE_LEFT))
+    {
+        return defenseplay();
+    }
     else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5)   // change 5
     {
         return defenseplay();
