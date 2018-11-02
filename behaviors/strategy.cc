@@ -398,13 +398,17 @@ SkillType NaoBehavior::defenseplay()
         return kickBall(KICK_FORWARD, VecPosition(16,0,0));
     }
 
-    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 8 && worldModel->getUNum() == LEFT_DEF)
+    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 9 && worldModel->getUNum() == LEFT_DEF)
     {
         return goToTarget(ball);
     }
-    else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 6)
+    else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 7 && worldModel->getUNum() == RIGHT_DEF)
     {
         return goToTarget(ball);
+    }
+    else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5 && worldModel->getUNum() == GOALKEEPER)
+    {
+        return kickBall(KICK_FORWARD, VecPosition(15,0,0));
     }
     else return moveToOff();
 }
