@@ -299,7 +299,7 @@ SkillType NaoBehavior::attackplay()
     {
         offset = -1;
     }
-    else if (gk->pos.getY() < 0)
+    else if (gk->pos.getY() < 0 || gk->pos.getY() == 0)
     {
         offset = 1;
     }
