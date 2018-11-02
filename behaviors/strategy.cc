@@ -184,9 +184,10 @@ SkillType NaoBehavior::selectSkill()
 
     else if((worldModel->getPlayMode() == PM_KICK_IN_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_IN_LEFT && worldModel->getSide() == SIDE_RIGHT))
         return kickin_opp();
-    
-
-    
+    else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5)   // change 5
+    {
+        return defenseplay();
+    }
     return attackplay();
 }
 
@@ -236,13 +237,53 @@ SkillType NaoBehavior::attackplay()
         }
     }
     /***********************************/
+
+    // Find closest player to opponent goal
+    int opponentClosestToGoal = -1;
+    double closestDistanceToGoal = 10000;
+    for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
+    {
+        VecPosition temp;
+        int playerNum = jj - WO_OPPONENT1 + 1;
+        WorldObject* opponent = worldModel->getWorldObject( jj );
+        if (opponent->validPosition) 
+        {
+            temp = opponent->pos;
+        }
+        else 
+        {
+            continue;
+        }
     
+        double distanceToGoal = temp.getDistanceTo(VecPosition(15,0,0));
+        if (distanceToGoal < closestDistanceToGoal) 
+        {
+            opponentClosestToGoal = playerNum;
+            closestDistanceToGoal = distanceToGoal;
+        }
+    }
+    /***********************************/
+    WorldObject* gk = worldModel->getWorldObject(opponentClosestToGoal);
+    double offset = 0;
+    if(gk->pos.getY() > 0)
+    {
+        offset = -1;
+    }
+    else if (gk->pos.getY() < 0)
+    {
+        offset = 1;
+    }
+
     if(worldModel->getUNum() == playerClosestToBall)
     {
-        if ((me.getDistanceTo(VecPosition(15,0,0))) < 3)     // see 4.5?
-            return kickBall(KICK_FORWARD,VecPosition(15,0,0));
+        if ((me.getDistanceTo(VecPosition(15,0,0))) < 3)    // see 4.5?
+        {
+            VecPosition temp = (16,0,0);
+            temp.setY(temp.getY() + offset);
+            return kickBall(KICK_FORWARD,temp);
+        }              
         else 
-            return kickBall(KICK_DRIBBLE, VecPosition(15,0,0)); 
+            return kickBall(KICK_DRIBBLE, VecPosition(16,0,0)); 
     }
     else 
     { 
@@ -281,7 +322,7 @@ SkillType NaoBehavior::kickin()
     /***********************************/
     if (worldModel->getUNum() == playerClosestToBall)
     {
-        return kickBall(KICK_FORWARD, VecPosition(15,0,0)); //change vecposition to position of teammmate
+        return kickBall(KICK_FORWARD, VecPosition(16,0,0)); //change vecposition to position of teammmate
     }  
     return moveToOff();    // change to go to position
 }
@@ -324,7 +365,7 @@ SkillType NaoBehavior::defenseplay()
     {
         // on-ball player
         // goToTarget(ball);
-        return kickBall(KICK_FORWARD, VecPosition(15,0,0));
+        return kickBall(KICK_FORWARD, VecPosition(16,0,0));
     }
     else return moveToOff();
 }
@@ -664,7 +705,6 @@ SkillType NaoBehavior::demoKickingCircle()
 
     if (playerClosestToBall == worldModel-> getUNum()) 
     {
-        // Have closest player kick the ball toward the center
         return kickBall(KICK_FORWARD, center);
     } 
     else 
