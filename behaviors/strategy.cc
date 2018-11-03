@@ -169,7 +169,7 @@ SkillType NaoBehavior::selectSkill()
         std::cout << LEFT_FORWARD << " " << WO_TEAMMATE1 << " ";
         std::cout << worldModel->getUNum() << "\n";
     }*/
-    //return testing();
+    // return testing();
     if ((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT))
         return kickoff();
     else if ((worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_RIGHT))
@@ -224,7 +224,15 @@ SkillType NaoBehavior::selectSkill()
 
 SkillType NaoBehavior::testing()
 { 
-    return SKILL_STAND;
+    if(worldModel->getUNum() == CENTRE_FORWARD)
+    {
+        if(ball.getDistanceTo(VecPosition(15,0,0)) < 5)
+        {
+            return kickBall(KICK_FORWARD,VecPosition(16,0,0));
+        }
+        else return kickBall(KICK_DRIBBLE,VecPosition(15,0,0));
+    }
+    else return SKILL_STAND;
 }
 
 SkillType NaoBehavior::stay()
@@ -310,6 +318,7 @@ SkillType NaoBehavior::attackplay()
         {
             VecPosition temp = VecPosition(16,0,0);
             temp.setY(offset);
+            temp.setZ(0);
             return kickBall(KICK_FORWARD,temp);
         }              
         else 
