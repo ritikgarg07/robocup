@@ -322,7 +322,7 @@ SkillType NaoBehavior::attackplay()
             return kickBall(KICK_FORWARD,temp);
         }              
         else 
-            return kickBall(KICK_DRIBBLE, VecPosition(16,0,0)); 
+            return kickBall(KICK_LONG, VecPosition(16,0,0)); 
     }
     else 
     { 

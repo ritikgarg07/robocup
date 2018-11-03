@@ -5,7 +5,7 @@
 5) defensive players move to ball when within a critical distance	ritik done
 6) goalie logic 							aryaman done
 7) defender logic							ritik done
-8) get 2 kicks
+8) get 2 kicks								Aryaman done
 9) kickoff setpiece, ie- kinda passing
 10) passing
 11) goalkick, player moves to target of goal
