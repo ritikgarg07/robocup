@@ -331,9 +331,10 @@ SkillType NaoBehavior::attackplay()
     if(worldModel->getUNum() == winger && playerClosestToBall != winger)
     {
         if(winger == RIGHT_FORWARD)
-            return goToTarget(VecPosition(9,1,0));               //change vecposition
-        else return goToTarget(VecPosition(9,-1,0));
+            return goToTarget(VecPosition(9,-1,0));               //change vecposition
+        else return goToTarget(VecPosition(9,1,0));
     }
+    /*******counts numbber of oppenents within a certain distance of the winger***/
     int opponent_counter = 0;
     for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
     {
@@ -353,6 +354,8 @@ SkillType NaoBehavior::attackplay()
             opponent_counter++;    
         }
     }
+    ////////////////////////////////////////////////////////////////////////////////
+    /************counts number of opponents within a certain distance of the on-ball player*******/
     int player_counter = 0;
     for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
     {
@@ -372,6 +375,7 @@ SkillType NaoBehavior::attackplay()
             player_counter++;    
         }
     }    
+    //////////////////////////////////////////////////////////////////////////////////
 
     if(worldModel->getUNum() == playerClosestToBall)
     {
@@ -382,12 +386,12 @@ SkillType NaoBehavior::attackplay()
             temp.setZ(0);
             return kickBall(KICK_LONG,temp);
         }
-        else if(opponent_counter < 3 && (ball.getDistanceTo(VecPosition(15,0,0)) > 10) && player_counter > 2)
+        else if(opponent_counter < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && player_counter > 1)
         {
             VecPosition temp = VecPosition(9,1,0);
             if(winger == RIGHT_FORWARD)
                 temp.setY(-1);
-            if (me.getDistanceTo(VecPosition(9,0,0)) < 7)
+            if (me.getDistanceTo(VecPosition(9,0,0)) < 5)
             {
                 return kickBall(KICK_FORWARD,temp);
             }
