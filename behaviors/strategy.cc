@@ -250,7 +250,7 @@ SkillType NaoBehavior::kickoff()
         return kickBall(KICK_FORWARD, temp);
     }
     if(worldModel->getUNum() == LEFT_FORWARD && ((worldModel->getTime()-startTime > 8))) {
-        return kickBall(KICK_LONG, VecPosition(16,1,0));
+        return kickBall(KICK_LONG, VecPosition(16,0.7,0));
     }
     return SKILL_STAND;
 }
@@ -380,7 +380,7 @@ SkillType NaoBehavior::attackplay()
             VecPosition temp = VecPosition(16,0,0);
             temp.setY(offset);
             temp.setZ(0);
-            return kickBall(KICK_FORWARD,temp);
+            return kickBall(KICK_LONG,temp);
         }
         else if(opponent_counter < 3 && (ball.getDistanceTo(VecPosition(15,0,0)) > 10) && player_counter > 2)
         {
