@@ -385,8 +385,13 @@ SkillType NaoBehavior::attackplay()
 
     if(worldModel->getUNum() == playerClosestToBall)
     {
+        if(ball.getDistanceTo(VecPosition(15,0,0)) < 0.8)
+        {
+            return kickBall(KICK_DRIBBLE,VecPosition(16,0,0));
+        }
+        
         // distance to goal less than 3 => use short kick to kick to goal
-        if ((ball.getDistanceTo(VecPosition(15,0,0))) < 3)    
+        else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 3)    
         {
             VecPosition shoot_goal = VecPosition(16,0,0);
             shoot_goal.setY(offset);
