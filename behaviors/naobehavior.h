@@ -232,7 +232,7 @@ protected:
     SkillType threeManWeave();
     SkillType demoKickingCircle();
     SkillType threemanpass();
-    SkillType kickoff();
+    SkillType kickoff(double time);
     SkillType testing();
     SkillType attackplay();
     SkillType defenseplay();
