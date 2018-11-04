@@ -33,12 +33,12 @@ void NaoBehavior::beam( double& beamX, double& beamY, double& beamAngle ) {
     switch(worldModel->getUNum())
     {
         case LEFT_FORWARD:
-            beamX = -1;
-            beamY = 5;
+            beamX = -.1;
+            beamY = 7;
             break;
         case RIGHT_FORWARD:
-            beamX = -1;
-            beamY = -5;
+            beamX = -.1;
+            beamY = -7;
             break;
         case CENTRE_FORWARD:
             beamX = -1;
@@ -102,6 +102,8 @@ float get_radius(VecPosition centre, VecPosition A)
     // Vecposition A == Vecposition of a point on the CIRCLE
     return centre.getDistanceTo(A);
 }
+
+
 
 
 SkillType NaoBehavior::selectSkill() 
@@ -170,8 +172,12 @@ SkillType NaoBehavior::selectSkill()
         std::cout << worldModel->getUNum() << "\n";
     }*/
     // return testing();
-    if ((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT))
+    static double startTime = worldModel->getTime();    
+    if (((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)) || (worldModel->getTime()-startTime < 20) ||  ((worldModel->getTime()-startTime < 320)&&(worldModel->getTime()-startTime > 300)))
+    {
+        cout << "kickoff" << "\n"; 
         return kickoff();
+    }
     else if ((worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_RIGHT))
     {
         return stay();
@@ -219,20 +225,13 @@ SkillType NaoBehavior::selectSkill()
     {
         return defenseplay();
     }
+    cout << "attackplay" << endl;
     return attackplay();
 }
 
 SkillType NaoBehavior::testing()
 { 
-    if(worldModel->getUNum() == CENTRE_FORWARD)
-    {
-        if(ball.getDistanceTo(VecPosition(15,0,0)) < 5)
-        {
-            return kickBall(KICK_FORWARD,VecPosition(16,0,0));
-        }
-        else return kickBall(KICK_DRIBBLE,VecPosition(15,0,0));
-    }
-    else return SKILL_STAND;
+    return SKILL_STAND;
 }
 
 SkillType NaoBehavior::stay()
@@ -242,9 +241,20 @@ SkillType NaoBehavior::stay()
 
 SkillType NaoBehavior::kickoff()
 {
-    if (worldModel->getUNum() == CENTRE_FORWARD)
-        return kickBall(KICK_FORWARD, VecPosition(-5,6,0)); //change initial kick position
-    else return SKILL_STAND;
+
+    static double startTime = worldModel->getTime();    
+    if(worldModel->getUNum() == CENTRE_FORWARD)
+    {
+        //kick to left forward or right ehhhh
+        WorldObject* teammate = worldModel->getWorldObject(LEFT_FORWARD);
+        VecPosition temp = teammate->pos;
+        temp = temp + VecPosition(1,0,0);
+        return kickBall(KICK_FORWARD, temp);
+    }
+    if(worldModel->getUNum() == LEFT_FORWARD && ((worldModel->getTime()-startTime > 8))) {
+        return kickBall(KICK_LONG, VecPosition(16,1,0));
+    }
+    return SKILL_STAND;
 }
 
 SkillType NaoBehavior::attackplay()
@@ -322,7 +332,7 @@ SkillType NaoBehavior::attackplay()
             return kickBall(KICK_FORWARD,temp);
         }              
         else 
-            return kickBall(KICK_LONG, VecPosition(16,0,0)); 
+            return kickBall(KICK_DRIBBLE, VecPosition(16,0,0)); 
     }
     else 
     { 
@@ -897,5 +907,3 @@ SkillType NaoBehavior::demoKickingCircle()
     }
 }
 
-
-    
