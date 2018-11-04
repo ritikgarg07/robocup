@@ -319,10 +319,12 @@ SkillType NaoBehavior::attackplay()
     {
         offset = 1;
     }
+    else
+        offset = 0;
 
     if(worldModel->getUNum() == playerClosestToBall)
     {
-        if ((me.getDistanceTo(VecPosition(15,0,0))) < 5)    // see 4.5?
+        if ((ball.getDistanceTo(VecPosition(15,0,0))) < 5)    // see 4.5?
         {
             VecPosition temp = VecPosition(16,0,0);
             temp.setY(offset);
@@ -447,7 +449,7 @@ SkillType NaoBehavior::moveToOff()
 
    // change code here to set the positions
    /*targpos[0]= ball;
-   double GKx = 10;
+    double GKx = 10;
     VecPosition goalCentre = Vecposition(-15, 0, 0);
     Vecposition temp = (ball +(GKx*goalCentre))/(1+GKx);
     targpos[1] = temp;// GK i want this to move in a circle but be in the middle of the ball and the centre of the goal
@@ -462,7 +464,7 @@ SkillType NaoBehavior::moveToOff()
     targpos[8] = ; //mid left
     targpos[9] = ; //forward left
     targpos[10] = ; //foward right
-*/
+    */
     int opponentClosestToGoal [3];
     double closestDistanceToGoal [3];
     for(int ii = 0; ii< 3; ii++){
@@ -613,7 +615,8 @@ SkillType NaoBehavior::moveToOff()
     }
     else
     {
-    target = targpos[ansVector[selfindex].second.second];
+        //target = targpos[ansVector[selfindex].second.second];     COMMENTED THIS OUT!
+        target = ball;
     }
     target = collisionAvoidance(true /*teammate*/, false/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
    
