@@ -252,7 +252,8 @@ SkillType NaoBehavior::kickoff(double time)
         temp = temp + VecPosition(1,0,0);
         return kickBall(KICK_FORWARD, temp);
     }
-    if(worldModel->getUNum() == LEFT_FORWARD && (time>1)) {
+    if(worldModel->getUNum() == LEFT_FORWARD && (time>1))           // is it supposed to be 1 here?
+    {
         return kickBall(KICK_LONG, VecPosition(15,0.7,0));
     }
     return SKILL_STAND;
@@ -382,7 +383,7 @@ SkillType NaoBehavior::attackplay()
 
     if(worldModel->getUNum() == playerClosestToBall)
     {
-        // distance to goal less than three => use short kick to kick to goal
+        // distance to goal less than 3 => use short kick to kick to goal
         if ((ball.getDistanceTo(VecPosition(15,0,0))) < 3)    
         {
             VecPosition shoot_goal = VecPosition(16,0,0);
@@ -391,7 +392,7 @@ SkillType NaoBehavior::attackplay()
             return kickBall(KICK_FORWARD,shoot_goal);
         }
 
-        // distance to goal more than three but less than 7 => use long kick to kick to goal
+        // distance to goal more than 3 but less than 7 => use long kick to kick to goal
         else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 7)    
         {
             VecPosition shoot_goal = VecPosition(16,0,0);
