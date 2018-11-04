@@ -1,10 +1,10 @@
-1) use new kicks       														ritik 		done
-2) counter-passing	(dangerous player)										aryaman	 	done			
-3) adjust kick position based on gk position								ritik		done
-4) wing pass(ATTACK)
-5) defensive players move to ball when within a critical distance			ritik 		done
-6) goalie logic 															aryaman 	done
-7) defender logic															ritik 		done
+1) use new kicks       														Ritik 		done
+2) counter-passing	(dangerous player)										Aryaman	 	done			
+3) adjust kick position based on gk position								Ritik		done
+4) wing pass(ATTACK)														Ritik		done
+5) defensive players move to ball when within a critical distance			Ritik 		done
+6) goalie logic 															Aryaman 	done
+7) defender logic															Ritik 		done
 8) get 2 kicks																Aryaman 	done
 9) kickoff setpiece, ie- kinda passing      								Aryaman 	done
 10) passing
