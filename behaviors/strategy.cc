@@ -382,7 +382,7 @@ SkillType NaoBehavior::attackplay()
             temp.setZ(0);
             return kickBall(KICK_FORWARD,temp);
         }
-        else if(opponent_counter < 3 && ball.getDistanceTo(VecPosition(15,0,0) > 10) && player_counter > 2)
+        else if(opponent_counter < 3 && (ball.getDistanceTo(VecPosition(15,0,0)) > 10) && player_counter > 2)
         {
             VecPosition temp = VecPosition(9,1,0);
             if(winger == RIGHT_FORWARD)
