@@ -92,7 +92,7 @@ NaoBehavior(const std::string teamName, int uNum, const map<string, string>& nam
     // TODO: Treat paths more correctly? (system independent way)
     try {
         readSkillsFromFile( "./skills/stand.skl" );
-        // readSkillsFromFile( "./skills/kick.skl" );
+        readSkillsFromFile( "./skills/kick.skl" );
         switch(uNum){
             case 1: readSkillsFromFile( "./skills/kickbottype0.skl" );
                     break;

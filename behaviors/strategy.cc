@@ -324,7 +324,7 @@ SkillType NaoBehavior::attackplay()
             return kickBall(KICK_FORWARD,temp);
         }              
         else 
-            return kickBall(KICK_DRIBBLE, VecPosition(16,0,0)); 
+            return kickBall(KICK_LONG, VecPosition(16,0,0)); 
     }
     else 
     { 
@@ -417,9 +417,16 @@ SkillType NaoBehavior::defenseplay()
     {
         return goToTarget(ball);
     }
-    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5 && worldModel->getUNum() == GOALKEEPER)
+    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5 && (worldModel->getUNum() == GOALKEEPER || worldModel->getUNum() == CENTRE_FORWARD))
     {
-        return kickBall(KICK_FORWARD, VecPosition(15,0,0));
+        if(worldModel->getUNum() == GOALKEEPER)
+        {
+            return kickBall(KICK_FORWARD, VecPosition(15,0,0));
+        }
+        else
+        {
+            return goToTarget(VecPosition(0,0,0));
+        }
     }
     else return moveToOff();
 }

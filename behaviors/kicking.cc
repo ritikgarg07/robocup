@@ -80,7 +80,7 @@ SkillType NaoBehavior::kickBallAtPresetTarget() {
 
     // If we're within 1 meter of the ball and not dribbling, we need to select a kick and position ourselves
     // Dribbling is handled later
-    if (me.getDistanceTo(ball) <= 1 && KICK_DRIBBLE != kickType) {
+    if (me.getDistanceTo(ball) <= 1 && KICK_DRIBBLE != kickType) {/////
         // Figure out which kick to use (left or right foot)
         SkillType kick;
         double ball_dist;
@@ -339,6 +339,10 @@ double NaoBehavior::getStdNameParameter(const SkillType kick_skill, const string
     case SKILL_KICK_RIGHT_LEG:
         prefix = "kick_";
         break;
+    case SKILL_LONG_KICK_LEFT_LEG:
+    case SKILL_LONG_KICK_RIGHT_LEG:
+        prefix = "kick_";
+        break;
     default:
         cerr << "Tried to get a parameter for unsupported kick: " + EnumParser<SkillType>::getStringFromEnum(kick_skill) << endl;
         break;
@@ -353,10 +357,17 @@ void NaoBehavior::getSkillsForKickType(int kickType, SkillType skills[]) {
         skills[1] = SKILL_KICK_IK_0_RIGHT_LEG;
         break;
     case KICK_FORWARD:
-    default:
         skills[0] = SKILL_KICK_LEFT_LEG;
         skills[1] = SKILL_KICK_RIGHT_LEG;
         break;
+    case KICK_LONG:
+        skills[0] = SKILL_LONG_KICK_LEFT_LEG;
+        skills[1] = SKILL_LONG_KICK_RIGHT_LEG;
+        break;
+    default:
+        skills[0] = SKILL_KICK_LEFT_LEG;
+        skills[1] = SKILL_KICK_RIGHT_LEG;
+    break;
     }
 }
 

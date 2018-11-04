@@ -273,6 +273,9 @@ enum SkillType {
     SKILL_KICK_IK_0_LEFT_LEG,
     SKILL_KICK_IK_0_RIGHT_LEG,
 
+    SKILL_LONG_KICK_LEFT_LEG,
+    SKILL_LONG_KICK_RIGHT_LEG,    
+
     SKILL_NONE
 
 };
@@ -283,7 +286,7 @@ enum SkillType {
 #define KICK_DRIBBLE 0
 #define KICK_FORWARD 1
 #define KICK_IK 2
-
+#define KICK_LONG 3
 
 // Number of agents on the team
 #define NUM_AGENTS 11
