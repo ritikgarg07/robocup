@@ -173,9 +173,13 @@ SkillType NaoBehavior::selectSkill()
     }*/
     // return testing();
     static double startTime = worldModel->getTime();    
-    if (((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)) || (worldModel->getTime()-startTime < 20) ||  ((worldModel->getTime()-startTime < 320)&&(worldModel->getTime()-startTime > 300)))
+    if(((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)))
     {
-            return kickoff();
+        startTime = worldModel->getTime();
+    }
+    if (((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)) || worldModel->getTime()-startTime < 10)
+    {
+            return kickoff(worldModel->getTime() - startTime);
     }
     else if ((worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_RIGHT))
     {
@@ -237,10 +241,9 @@ SkillType NaoBehavior::stay()
     return SKILL_STAND;
 }
 
-SkillType NaoBehavior::kickoff()
+SkillType NaoBehavior::kickoff(double time)
 {
 
-    static double startTime = worldModel->getTime();    
     if(worldModel->getUNum() == CENTRE_FORWARD)
     {
         //kick to left forward or right ehhhh
@@ -249,7 +252,7 @@ SkillType NaoBehavior::kickoff()
         temp = temp + VecPosition(1,0,0);
         return kickBall(KICK_FORWARD, temp);
     }
-    if(worldModel->getUNum() == LEFT_FORWARD && ((worldModel->getTime()-startTime > 8))) {
+    if(worldModel->getUNum() == LEFT_FORWARD && (time>1)) {
         return kickBall(KICK_LONG, VecPosition(15,0.7,0));
     }
     return SKILL_STAND;
