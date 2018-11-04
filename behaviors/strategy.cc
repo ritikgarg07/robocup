@@ -34,11 +34,11 @@ void NaoBehavior::beam( double& beamX, double& beamY, double& beamAngle ) {
     {
         case LEFT_FORWARD:
             beamX = -.1;
-            beamY = 7;
+            beamY = 6;
             break;
         case RIGHT_FORWARD:
             beamX = -.1;
-            beamY = -7;
+            beamY = -6;
             break;
         case CENTRE_FORWARD:
             beamX = -1;
@@ -250,7 +250,7 @@ SkillType NaoBehavior::kickoff()
         return kickBall(KICK_FORWARD, temp);
     }
     if(worldModel->getUNum() == LEFT_FORWARD && ((worldModel->getTime()-startTime > 8))) {
-        return kickBall(KICK_LONG, VecPosition(16,0.7,0));
+        return kickBall(KICK_LONG, VecPosition(15,0.7,0));
     }
     return SKILL_STAND;
 }
