@@ -171,7 +171,7 @@ SkillType NaoBehavior::selectSkill()
         std::cout << LEFT_FORWARD << " " << WO_TEAMMATE1 << " ";
         std::cout << worldModel->getUNum() << "\n";
     }*/
-    return testing();
+    // return testing();
     static double startTime = worldModel->getTime();    
     if (((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)) || (worldModel->getTime()-startTime < 20) ||  ((worldModel->getTime()-startTime < 320)&&(worldModel->getTime()-startTime > 300)))
     {
@@ -229,15 +229,7 @@ SkillType NaoBehavior::selectSkill()
 
 SkillType NaoBehavior::testing()
 { 
-    if(worldModel->getUNum() == CENTRE_FORWARD)
-    {
-        if(me.getDistanceTo(VecPosition(15,0,0)) < 5)
-        {
-            return kickBall(KICK_LONG,VecPosition(16,0,0));
-        }
-        return kickBall(KICK_DRIBBLE,VecPosition(15,0,0));
-    }
-    else return SKILL_STAND;
+    return SKILL_STAND;    
 }
 
 SkillType NaoBehavior::stay()
@@ -387,33 +379,39 @@ SkillType NaoBehavior::attackplay()
 
     if(worldModel->getUNum() == playerClosestToBall)
     {
-        if ((ball.getDistanceTo(VecPosition(15,0,0))) < 5)    // see 4.5?
+        // distance to goal less than three => use short kick to kick to goal
+        if ((ball.getDistanceTo(VecPosition(15,0,0))) < 3)    
         {
-            VecPosition temp = VecPosition(16,0,0);
-            temp.setY(offset);
-            temp.setZ(0);
-            return kickBall(KICK_LONG,temp);
+            VecPosition shoot_goal = VecPosition(16,0,0);
+            shoot_goal.setY(offset);
+            shoot_goal.setZ(0);
+            return kickBall(KICK_FORWARD,shoot_goal);
         }
+
+        // distance to goal more than three but less than 7 => use long kick to kick to goal
+        else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 7)    
+        {
+            VecPosition shoot_goal = VecPosition(16,0,0);
+            shoot_goal.setY(offset);
+            shoot_goal.setZ(0);
+            return kickBall(KICK_LONG,shoot_goal);
+        }
+
+        // passing to winger
         else if(opponent_counter < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && player_counter > 1)
         {
-            VecPosition temp = VecPosition(9,1,0);
+            VecPosition wingie = VecPosition(9,1,0);
             if(winger == RIGHT_FORWARD)
-                temp.setY(-1);
+                wingie.setY(-1);
             if (me.getDistanceTo(VecPosition(9,0,0)) < 5)
             {
-                return kickBall(KICK_FORWARD,temp);
+                return kickBall(KICK_FORWARD,wingie);
             }
-            else 
-                {
-                    if(ball.getDistanceTo(VecPosition(15,0,0)) > 3)
-                    {
-                        return kickBall(KICK_LONG,temp);
-                    }
-                    else return kickBall(KICK_FORWARD,temp);
-                }
-        }              
-        else 
-            return kickBall(KICK_DRIBBLE, VecPosition(16,0,0)); 
+            else return kickBall(KICK_LONG,wingie);
+        }    
+
+        // dribble to goal     
+        else return kickBall(KICK_DRIBBLE, VecPosition(16,0,0)); 
     }
     else 
     { 
@@ -493,8 +491,6 @@ SkillType NaoBehavior::defenseplay()
     /***********************************/
     if(worldModel->getUNum() == playerClosestToBall)
     {
-        // on-ball player
-        // goToTarget(ball);
         return kickBall(KICK_LONG, VecPosition(16,0,0));
     }
 
@@ -506,16 +502,9 @@ SkillType NaoBehavior::defenseplay()
     {
         return goToTarget(ball);
     }
-    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5 && (worldModel->getUNum() == GOALKEEPER || worldModel->getUNum() == CENTRE_FORWARD))
+    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5 && (worldModel->getUNum() == GOALKEEPER))
     {
-        if(worldModel->getUNum() == GOALKEEPER)
-        {
-            return kickBall(KICK_LONG, VecPosition(15,0,0));
-        }
-        else
-        {
-            return goToTarget(VecPosition(0,0,0));
-        }
+        return kickBall(KICK_LONG, VecPosition(15,0,0));
     }
     else return moveToOff();
 }
@@ -589,9 +578,6 @@ SkillType NaoBehavior::moveToOff()
             opponentClosestToGoal[2] = jj;
         }
     }
-
-
-
     
     for (int ii = 6;ii <11;ii++)
     {
@@ -600,21 +586,14 @@ SkillType NaoBehavior::moveToOff()
     targpos[0] = VecPosition(-14.5,0,0);
     targpos[1] = VecPosition(-14.5,0.85,0);
     targpos[2] = VecPosition(-14.5,-0.85,0);
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < 3; i++)
+    {
         VecPosition temp;
         WorldObject* opponent = worldModel->getWorldObject( opponentClosestToGoal[i] );
         temp = opponent->pos;
         targpos[i+3] = temp;
     }
-
-    //int factGK = 10;
-    //VecPosition ourgoal = VecPosition(-15,0,0);
-    //VecPosition target_gk = ((ball + (ourgoal*factGK))*(1/(1+factGK)));
-    //VecPosition target_gk = VecPosition(-14,0,0);
-    //target_gk.setY(ball.getY()/(1+factGK)); 
-    //modify the code to target the two(or three?) "most dangerous" then change targets of the bots nearest to the dangerous positions to the dangerous positons
-    //for(int i = WO_OPPONENT1; i < WO_OPPONENT1+)
-
+    
     VecPosition teampos[11];
     for(int i = WO_TEAMMATE1; i < WO_TEAMMATE1+NUM_AGENTS; i++){
         WorldObject* teammate = worldModel->getWorldObject( i );
@@ -645,7 +624,7 @@ SkillType NaoBehavior::moveToOff()
             truth[i-3] = true;
         }
     }
-    if(worldModel->getUNum() == LEFT_MID)
+    if(worldModel->getUNum() == WO_TEAMMATE4)
     {
         target = targpos[tt];
     }
@@ -659,7 +638,7 @@ SkillType NaoBehavior::moveToOff()
             truth[i-3] = true;
         }
     }
-    if(worldModel->getUNum() == CENTRE_MID)
+    if(worldModel->getUNum() == WO_TEAMMATE5)
     {
         target = targpos[tt];
     }
@@ -673,7 +652,7 @@ SkillType NaoBehavior::moveToOff()
         }
     }
 
-    if(worldModel->getUNum() == RIGHT_MID)
+    if(worldModel->getUNum() == WO_TEAMMATE6)
     {
         target = targpos[tt];               
     }
