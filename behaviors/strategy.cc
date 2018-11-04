@@ -358,7 +358,8 @@ SkillType NaoBehavior::attackplay()
             opponent_counter++;    
         }
     }
-    ////////////////////////////////////////////////////////////////////////////////
+    /******************************************************************************/
+    
     /************counts number of opponents within a certain distance of the on-ball player*******/
     int player_counter = 0;
     for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
@@ -380,7 +381,7 @@ SkillType NaoBehavior::attackplay()
             player_counter++;    
         }
     }    
-    //////////////////////////////////////////////////////////////////////////////////
+    /******************************************************************/
 
     if(worldModel->getUNum() == playerClosestToBall)
     {
@@ -402,7 +403,7 @@ SkillType NaoBehavior::attackplay()
             return kickBall(KICK_LONG,shoot_goal);
         }
 
-        // passing to winger
+        // passing to wingers
         else if(opponent_counter < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && player_counter > 1)
         {
             VecPosition wingie = VecPosition(9,1,0);
@@ -453,11 +454,12 @@ SkillType NaoBehavior::kickin()
         }
     }
     /***********************************/
+    
     if (worldModel->getUNum() == playerClosestToBall)
     {
         return kickBall(KICK_FORWARD, VecPosition(16,0,0)); //change vecposition to position of teammmate
     }  
-    return moveToOff();    // change to go to position
+    return moveToOff();    
 }
 
 SkillType NaoBehavior::kickin_opp()
@@ -494,6 +496,7 @@ SkillType NaoBehavior::defenseplay()
         }
     }
     /***********************************/
+    
     if(worldModel->getUNum() == playerClosestToBall)
     {
         return kickBall(KICK_LONG, VecPosition(16,0,0));
@@ -518,140 +521,85 @@ VecPosition targpos[11];
 
 SkillType NaoBehavior::moveToOff()
 {
-   //make an array to store the targets
-   //these will be decided based on the ball and the boundaries
-   //init target array
-
-   // change code here to set the positions
-   /*targpos[0]= ball;
-    double GKx = 10;
-    VecPosition goalCentre = Vecposition(-15, 0, 0);
-    Vecposition temp = (ball +(GKx*goalCentre))/(1+GKx);
-    targpos[1] = temp;// GK i want this to move in a circle but be in the middle of the ball and the centre of the goal
-    dobule CBx = 8;
-    Vecposition temp = (ball +(CBx*goalCentre))/(1+CBx);
-    targpos[2] = temp; //defender centre back, same as GK but further away from the goal
-    targpos[3] = ; //defender cntre right
-    targpos[4] = ; //defender centre left
-    targpos[5] = ; //mid back lefft
-    targpos[6] = ; //mid back right
-    targpos[7] = ; //midright
-    targpos[8] = ; //mid left
-    targpos[9] = ; //forward left
-    targpos[10] = ; //foward right
-    */
-    int opponentClosestToGoal [3];
-    double closestDistanceToGoal [3];
-    for(int ii = 0; ii< 3; ii++){
-        opponentClosestToGoal[ii] = -1;
-        closestDistanceToGoal[ii] = 10000;
-    }
-
-    for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
-    {
-        VecPosition temp;
-        WorldObject* opponent = worldModel->getWorldObject( jj );
-        if (opponent->validPosition) 
-        {
-            temp = opponent->pos;
-        }
-        else 
-        {
-            continue;
-        }
-    
-        double distanceToGoal = temp.getDistanceTo(VecPosition(-15,0,0));
-        
-        if (distanceToGoal < closestDistanceToGoal[0]) 
-        {
-            opponentClosestToGoal[2] = opponentClosestToGoal[1];
-            closestDistanceToGoal[2] = closestDistanceToGoal[1];
-            closestDistanceToGoal[1] = closestDistanceToGoal[0];
-            opponentClosestToGoal[1] = opponentClosestToGoal[0];
-            closestDistanceToGoal[0] = distanceToGoal;
-            opponentClosestToGoal[0] = jj;
-        }
-        else if(distanceToGoal < closestDistanceToGoal[1]){
-            opponentClosestToGoal[2] = opponentClosestToGoal[1];
-            closestDistanceToGoal[2] = closestDistanceToGoal[1];
-            closestDistanceToGoal[1] = distanceToGoal;
-            opponentClosestToGoal[1] = jj;
-            
-        }
-        else if(distanceToGoal < closestDistanceToGoal[2]){
-            closestDistanceToGoal[2] = distanceToGoal;
-            opponentClosestToGoal[2] = jj;
-        }
-    }
-    
-    for (int ii = 6;ii < 11;ii++)
-    {
-        targpos[ii] = ball;
-    }
+    VecPosition target = VecPosition(0,0,0);
     targpos[0] = VecPosition(-14.5,0,0);
     targpos[1] = VecPosition(-14.5,0.85,0);
     targpos[2] = VecPosition(-14.5,-0.85,0);
-    for(int i = 0; i < 3; i++)
+    
+    if(worldModel->getUNum() == LEFT_C_DEF || worldModel->getUNum() == RIGHT_C_DEF)
     {
-        VecPosition temp;
-        WorldObject* opponent = worldModel->getWorldObject( opponentClosestToGoal[i] );
-        temp = opponent->pos;
-        targpos[i+3] = temp;
+        int opponentClosestToGoal [2];
+        double closestDistanceToGoal [2];
+        for(int ii = 0; ii < 2; ii++){
+            opponentClosestToGoal[ii] = -1;
+            closestDistanceToGoal[ii] = 10000;
+        }
+
+        for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
+        {
+            VecPosition temp;
+            WorldObject* opponent = worldModel->getWorldObject( jj );
+            if (opponent->validPosition) 
+            {
+                temp = opponent->pos;
+            }
+            else 
+            {
+                continue;
+            }    
+            double distanceToGoal = temp.getDistanceTo(VecPosition(-15,0,0));
+        
+            if (distanceToGoal < closestDistanceToGoal[0]) 
+            {
+                closestDistanceToGoal[1] = closestDistanceToGoal[0];
+                opponentClosestToGoal[1] = opponentClosestToGoal[0];
+                closestDistanceToGoal[0] = distanceToGoal;
+                opponentClosestToGoal[0] = jj;
+            }
+            else if(distanceToGoal < closestDistanceToGoal[1])
+            {
+                closestDistanceToGoal[1] = distanceToGoal;
+                opponentClosestToGoal[1] = jj;
+            }
+        }    
+        for(int i = 0; i < 2; i++)
+        {
+            VecPosition temp;
+            WorldObject* opponent = worldModel->getWorldObject( opponentClosestToGoal[i] );
+            temp = opponent->pos;
+            targpos[i+3] = temp;
+        }
+        WorldObject* teammate = worldModel->getWorldObject( LEFT_C_DEF );
+        VecPosition left_pos = teammate->pos;
+        if(left_pos.getDistanceTo(targpos[3]) < left_pos.getDistanceTo(targpos[4]))
+        {
+            if(worldModel->getUNum() == LEFT_C_DEF)
+            {
+                target = targpos[3];
+            }
+            else if(worldModel->getUNum() == RIGHT_C_DEF)
+            {
+                target = targpos[4];
+            }
+        }
+        else if (left_pos.getDistanceTo(targpos[3]) > left_pos.getDistanceTo(targpos[4]))
+        {
+            if(worldModel->getUNum() == LEFT_C_DEF)
+            {
+                target = targpos[4];
+            }
+            else if(worldModel->getUNum() == RIGHT_C_DEF)
+            {
+                target = targpos[3];
+            }
+        }        
     }
     
-    VecPosition teampos[11];
-    for(int i = WO_TEAMMATE1; i < WO_TEAMMATE1+NUM_AGENTS; i++){
-        WorldObject* teammate = worldModel->getWorldObject( i );
-        teampos[i-WO_TEAMMATE1] = teammate->pos;
-    }    
-    
-    VecPosition target;
-    double smallestDistance = 10000;
-    int tt = 0; 
-    bool truth[] = {false,false,false};
-    for(int i = 3; i < 6 ;i++){
-        VecPosition temp; 
-        WorldObject* teammate = worldModel->getWorldObject( WO_TEAMMATE4 );
-        temp = teammate->pos;
-        if(temp.getDistanceTo(targpos[i]) < smallestDistance)
-        {
-            tt = i;
-            truth[i-3] = true;
-        }
-    }
-    if(worldModel->getUNum() == WO_TEAMMATE4)
+    for (int ii = 5 ;ii < 11;ii++)
     {
-        target = targpos[tt];
-    }
-    smallestDistance = 10000;
-    for(int i = 3; i <6 ;i++){
-        VecPosition temp; 
-        WorldObject* teammate = worldModel->getWorldObject( WO_TEAMMATE5 );
-        temp = teammate->pos;
-        if(temp.getDistanceTo(targpos[i])<smallestDistance && !truth[i-3])
-        {
-            tt = i;
-            truth[i-3] = true;
-        }
-    }
-    if(worldModel->getUNum() == WO_TEAMMATE5)
-    {
-        target = targpos[tt];
-    }
-    for(int i = 3; i <6 ;i++){
-        VecPosition temp; 
-        WorldObject* teammate = worldModel->getWorldObject( WO_TEAMMATE6 );
-        temp = teammate->pos;
-        if(temp.getDistanceTo(targpos[i])<smallestDistance && !truth[i-3]){
-            tt = i;
-            truth[i-3] = true;
-        }
+        targpos[ii] = ball;
     }
 
-    if(worldModel->getUNum() == WO_TEAMMATE6)
-    {
-        target = targpos[tt];               
-    }
     if (worldModel->getUNum() == GOALKEEPER)
     {    
         target = targpos[0];
@@ -664,17 +612,13 @@ SkillType NaoBehavior::moveToOff()
     {
         target = targpos[2];
     }
-    else
+    else if(worldModel->getUNum() != LEFT_C_DEF && worldModel->getUNum() != RIGHT_C_DEF)
     {
         target = ball;
     }
-    target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+    target = collisionAvoidance(true /*teammate*/, false/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     return goToTarget(target);
 }
-
-//should I have a different function for moveToDeff?
-//how to work on passes?
-
 
 SkillType NaoBehavior::threemanpass() 
 {
