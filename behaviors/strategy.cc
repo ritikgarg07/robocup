@@ -175,8 +175,7 @@ SkillType NaoBehavior::selectSkill()
     static double startTime = worldModel->getTime();    
     if (((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)) || (worldModel->getTime()-startTime < 20) ||  ((worldModel->getTime()-startTime < 320)&&(worldModel->getTime()-startTime > 300)))
     {
-        cout << "kickoff" << "\n"; 
-        return kickoff();
+            return kickoff();
     }
     else if ((worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_RIGHT))
     {
@@ -225,7 +224,6 @@ SkillType NaoBehavior::selectSkill()
     {
         return defenseplay();
     }
-    cout << "attackplay" << endl;
     return attackplay();
 }
 
