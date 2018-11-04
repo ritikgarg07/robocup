@@ -575,22 +575,22 @@ SkillType NaoBehavior::moveToOff()
         {
             if(worldModel->getUNum() == LEFT_C_DEF)
             {
-                target = targpos[3];
+                target = targpos[3] + VecPosition(1,0,0);
             }
             else if(worldModel->getUNum() == RIGHT_C_DEF)
             {
-                target = targpos[4];
+                target = targpos[4] + VecPosition(1,0,0);
             }
         }
         else if (left_pos.getDistanceTo(targpos[3]) > left_pos.getDistanceTo(targpos[4]))
         {
             if(worldModel->getUNum() == LEFT_C_DEF)
             {
-                target = targpos[4];
+                target = targpos[4] + VecPosition(1,0,0);
             }
             else if(worldModel->getUNum() == RIGHT_C_DEF)
             {
-                target = targpos[3];
+                target = targpos[3] + VecPosition(1,0,0);
             }
         }        
     }
