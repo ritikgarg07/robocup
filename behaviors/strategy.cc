@@ -407,7 +407,11 @@ SkillType NaoBehavior::attackplay()
             VecPosition shoot_goal = VecPosition(16,0,0);
             shoot_goal.setY(offset);
             shoot_goal.setZ(0);
-            return kickBall(KICK_FORWARD,shoot_goal);
+            if(player_counter < 3)
+            {
+                return kickBall(KICK_FORWARD,shoot_goal);
+            }
+            else return kickBall(KICK_DRIBBLE,shoot_goal);
         }
 
         // distance to goal more than 3 but less than 7 => use long kick to kick to goal
@@ -416,11 +420,15 @@ SkillType NaoBehavior::attackplay()
             VecPosition shoot_goal = VecPosition(16,0,0);
             shoot_goal.setY(offset);
             shoot_goal.setZ(0);
-            return kickBall(KICK_LONG,shoot_goal);
+            if(player_counter < 3)
+            {
+                return kickBall(KICK_LONG,shoot_goal);
+            }
+            else return kickBall(KICK_DRIBBLE,shoot_goal);
         }
 
         // passing to wingers
-        else if(opponent_counter < 3 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && player_counter > 1)
+        else if(opponent_counter < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && player_counter > 1)
         {
             VecPosition wingie = VecPosition(9,1,0);
             if(winger == RIGHT_FORWARD)
@@ -513,9 +521,35 @@ SkillType NaoBehavior::defenseplay()
     }
     /***********************************/
     
+    /************counts number of opponents within a certain distance of the ball*******/
+    int opponent_counter = 0;
+    for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
+    {
+        VecPosition temp;
+        WorldObject* opponent = worldModel->getWorldObject( jj );
+        if (opponent->validPosition) 
+        {
+            temp = opponent->pos;
+        }
+        else 
+        {
+            continue;
+        } 
+        double distanceToplayer = temp.getDistanceTo(ball);
+        if (distanceToplayer < 2) 
+        {
+            opponent_counter++;    
+        }
+    }    
+    /******************************************************************/
+
     if(worldModel->getUNum() == playerClosestToBall)
     {
-        return kickBall(KICK_LONG, VecPosition(16,0,0));
+        if(opponent_counter < 2 && ball.getDistanceTo(VecPosition(-15,0,0)) > 5)
+        {
+            return kickBall(KICK_LONG, VecPosition(15,0,0));
+        }
+        else return kickBall(KICK_DRIBBLE, VecPosition(16,0,0));
     }
     if(ball.getDistanceTo(VecPosition(-15,0,0)) < 9 && worldModel->getUNum() == LEFT_DEF)
     {
@@ -527,7 +561,7 @@ SkillType NaoBehavior::defenseplay()
     }
     if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5 && (worldModel->getUNum() == GOALKEEPER))
     {
-        if(ball.getDistanceTo(VecPosition(-15,0,0)) > 3)
+        if(opponent_counter == 0)
         {
             return kickBall(KICK_LONG, VecPosition(15,0,0));
         }
@@ -545,11 +579,11 @@ SkillType NaoBehavior::moveToOff()
     targpos[1] = VecPosition(-14.5,0.85,0);
     targpos[2] = VecPosition(-14.5,-0.85,0);
     
-    if(worldModel->getUNum() == LEFT_C_DEF || worldModel->getUNum() == RIGHT_C_DEF)
+    if(worldModel->getUNum() == LEFT_C_DEF)
     {
-        int opponentClosestToGoal [2];
-        double closestDistanceToGoal [2];
-        for(int ii = 0; ii < 2; ii++){
+        int opponentClosestToGoal [1];
+        double closestDistanceToGoal [1];
+        for(int ii = 0; ii < 1; ii++){
             opponentClosestToGoal[ii] = -1;
             closestDistanceToGoal[ii] = 10000;
         }
@@ -570,18 +604,11 @@ SkillType NaoBehavior::moveToOff()
         
             if (distanceToGoal < closestDistanceToGoal[0]) 
             {
-                closestDistanceToGoal[1] = closestDistanceToGoal[0];
-                opponentClosestToGoal[1] = opponentClosestToGoal[0];
                 closestDistanceToGoal[0] = distanceToGoal;
                 opponentClosestToGoal[0] = jj;
             }
-            else if(distanceToGoal < closestDistanceToGoal[1])
-            {
-                closestDistanceToGoal[1] = distanceToGoal;
-                opponentClosestToGoal[1] = jj;
-            }
         }    
-        for(int i = 0; i < 2; i++)
+        for(int i = 0; i < 1; i++)
         {
             VecPosition temp;
             WorldObject* opponent = worldModel->getWorldObject( opponentClosestToGoal[i] );
@@ -590,44 +617,9 @@ SkillType NaoBehavior::moveToOff()
         }
         WorldObject* teammate = worldModel->getWorldObject( LEFT_C_DEF );
         VecPosition left_pos = teammate->pos;
-        WorldObject* teammate2 = worldModel->getWorldObject( RIGHT_C_DEF );
-        VecPosition right_pos = teammate2->pos;
-
-        if(targpos[3].getDistanceTo(left_pos) < targpos[3].getDistanceTo(right_pos))
-        {
-            if(worldModel->getUNum() == LEFT_C_DEF)
-            {
-                target = targpos[3] + VecPosition(-1,0,0);
-            }
-            else if(worldModel->getUNum() == RIGHT_C_DEF)
-            {
-                target = targpos[4] + VecPosition(-1,0,0);
-            }
-        }
-        else
-        {
-            if(worldModel->getUNum() == LEFT_C_DEF)
-            {
-                target = targpos[4] + VecPosition(-0.5,0,0);
-                target = collisionAvoidance(true /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
-    
-            }
-            else if(worldModel->getUNum() == RIGHT_C_DEF)
-            {
-                target = targpos[3] + VecPosition(-0.5,0,0);
-                target = collisionAvoidance(true /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
-    
-            }
-        }        
+        target = targpos[3];
+        target = collisionAvoidance(true /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     }
-    // maybe redundant?
-    for (int ii = 5 ;ii < 11;ii++)
-    {
-        targpos[ii] = ball;
-        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
-    }
-    /////////////////////
-
     if (worldModel->getUNum() == GOALKEEPER)
     {   
         target = targpos[0];
@@ -646,11 +638,11 @@ SkillType NaoBehavior::moveToOff()
         target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     
     }
-    else if(worldModel->getUNum() != LEFT_C_DEF && worldModel->getUNum() != RIGHT_C_DEF)
+    // else if(worldModel->getUNum() != LEFT_C_DEF && worldModel->getUNum() != RIGHT_C_DEF)
+    else if(worldModel->getUNum() != LEFT_C_DEF)
     {
         target = ball;
         target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
-    
     }
     return goToTarget(target);
 }
