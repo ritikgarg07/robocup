@@ -628,7 +628,7 @@ SkillType NaoBehavior::moveToOff()
     else if(worldModel->getUNum() != LEFT_C_DEF)
     {
         target = ball;
-        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 0.5/*proximity thresh*/, .5/*collision thresh*/, target, false/*keepDistance*/);
+        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 0.5/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
 
     }
     return goToTarget(target);
