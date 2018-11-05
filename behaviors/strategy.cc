@@ -164,13 +164,6 @@ SkillType NaoBehavior::selectSkill()
     // return demoKickingCircle();
     // return threemanpass();
     // return testing();
-    // return football();
-    /*if(worldModel->getUNum() == LEFT_FORWARD)
-    {
-        std::cout << LEFT_FORWARD << " " << WO_TEAMMATE1 << " ";
-        std::cout << worldModel->getUNum() << "\n";
-    }*/
-    // return testing();
     static double startTime = worldModel->getTime();    
     if(((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)))
     {
@@ -618,31 +611,23 @@ SkillType NaoBehavior::moveToOff()
         WorldObject* teammate = worldModel->getWorldObject( LEFT_C_DEF );
         VecPosition left_pos = teammate->pos;
         target = targpos[3];
-        target = collisionAvoidance(true /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     }
     if (worldModel->getUNum() == GOALKEEPER)
     {   
         target = targpos[0];
-        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
-    
     }
     else if(worldModel->getUNum() == LEFT_DEF)
     {
         target = targpos[1];
-        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
-    
     }
     else if(worldModel->getUNum() == RIGHT_DEF)
     {
         target = targpos[2];
-        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
-    
     }
     // else if(worldModel->getUNum() != LEFT_C_DEF && worldModel->getUNum() != RIGHT_C_DEF)
     else if(worldModel->getUNum() != LEFT_C_DEF)
     {
         target = ball;
-        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     }
     return goToTarget(target);
 }
