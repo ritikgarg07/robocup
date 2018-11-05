@@ -618,12 +618,12 @@ SkillType NaoBehavior::moveToOff()
     for (int ii = 5 ;ii < 11;ii++)
     {
         targpos[ii] = ball;
-        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     }
     /////////////////////
 
     if (worldModel->getUNum() == GOALKEEPER)
-    {    ss
+    {   
         target = targpos[0];
         target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     
