@@ -389,8 +389,10 @@ SkillType NaoBehavior::attackplay()
     }    
     /******************************************************************/
 
+
     if(worldModel->getUNum() == playerClosestToBall)
     {
+        // distance to goal less than 0.8 => use dribble to kick to goal
         if(ball.getDistanceTo(VecPosition(15,0,0)) < 0.8)
         {
             return kickBall(KICK_DRIBBLE,VecPosition(16,0,0));
@@ -601,47 +603,47 @@ SkillType NaoBehavior::moveToOff()
             if(worldModel->getUNum() == LEFT_C_DEF)
             {
                 target = targpos[4] + VecPosition(-0.5,0,0);
-                target = collisionAvoidance(true /*teammate*/, true/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+                target = collisionAvoidance(true /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     
             }
             else if(worldModel->getUNum() == RIGHT_C_DEF)
             {
                 target = targpos[3] + VecPosition(-0.5,0,0);
-                target = collisionAvoidance(true /*teammate*/, true/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+                target = collisionAvoidance(true /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     
             }
         }        
     }
-    
+    // maybe redundant?
     for (int ii = 5 ;ii < 11;ii++)
     {
         targpos[ii] = ball;
         target = collisionAvoidance(true /*teammate*/, false/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
-    
     }
+    /////////////////////
 
     if (worldModel->getUNum() == GOALKEEPER)
-    {    
+    {    ss
         target = targpos[0];
-        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     
     }
     else if(worldModel->getUNum() == LEFT_DEF)
     {
         target = targpos[1];
-        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     
     }
     else if(worldModel->getUNum() == RIGHT_DEF)
     {
         target = targpos[2];
-        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     
     }
     else if(worldModel->getUNum() != LEFT_C_DEF && worldModel->getUNum() != RIGHT_C_DEF)
     {
         target = ball;
-        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     
     }
     return goToTarget(target);
