@@ -203,8 +203,11 @@ SkillType NaoBehavior::selectSkill()
         {
             return kickBall(KICK_FORWARD, VecPosition(15,0,0));
         }
-        else 
-            return moveToOff();
+        else if(worldModel->getUNum() == CENTRE_MID)
+        {
+            return goToTarget(VecPosition(0,0,0));
+        }
+         else return moveToOff();
     }
     else if((worldModel->getPlayMode() == PM_CORNER_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_CORNER_KICK_RIGHT && worldModel->getSide() == SIDE_RIGHT))
     {
