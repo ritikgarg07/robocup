@@ -402,7 +402,7 @@ SkillType NaoBehavior::attackplay()
         }
         
         // distance to goal less than 3 => use short kick to kick to goal
-        else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 3)    
+        else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 4)    
         {
             VecPosition shoot_goal = VecPosition(16,0,0);
             shoot_goal.setY(offset);
@@ -415,12 +415,12 @@ SkillType NaoBehavior::attackplay()
         }
 
         // distance to goal more than 3 but less than 7 => use long kick to kick to goal
-        else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 7)    
+        else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 10)    
         {
             VecPosition shoot_goal = VecPosition(16,0,0);
             shoot_goal.setY(offset);
             shoot_goal.setZ(0);
-            if(player_counter < 3)
+            if(player_counter == 0)
             {
                 return kickBall(KICK_LONG,shoot_goal);
             }
@@ -551,7 +551,7 @@ SkillType NaoBehavior::defenseplay()
         }
         else return kickBall(KICK_DRIBBLE, VecPosition(16,0,0));
     }
-    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 9 && worldModel->getUNum() == LEFT_DEF)
+    if(ball.getDistanceTso(VecPosition(-15,0,0)) < 9 && worldModel->getUNum() == LEFT_DEF)
     {
         return kickBall(KICK_DRIBBLE,VecPosition(15,0,0));
     }
