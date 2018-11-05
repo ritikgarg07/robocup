@@ -544,7 +544,7 @@ SkillType NaoBehavior::defenseplay()
         }
         else return kickBall(KICK_DRIBBLE, VecPosition(16,0,0));
     }
-    if(ball.getDistanceTso(VecPosition(-15,0,0)) < 9 && worldModel->getUNum() == LEFT_DEF)
+    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 9 && worldModel->getUNum() == LEFT_DEF)
     {
         return kickBall(KICK_DRIBBLE,VecPosition(15,0,0));
     }
@@ -628,6 +628,8 @@ SkillType NaoBehavior::moveToOff()
     else if(worldModel->getUNum() != LEFT_C_DEF)
     {
         target = ball;
+        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 0.5/*proximity thresh*/, .5/*collision thresh*/, target, false/*keepDistance*/);
+
     }
     return goToTarget(target);
 }
