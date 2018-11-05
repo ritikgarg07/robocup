@@ -524,7 +524,7 @@ SkillType NaoBehavior::defenseplay()
     }
     if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5 && (worldModel->getUNum() == GOALKEEPER))
     {
-        if(ball.getDistanceTo(VecPosition(-15,0,0)) > 1)
+        if(ball.getDistanceTo(VecPosition(-15,0,0)) > 2)
         {
             return kickBall(KICK_LONG, VecPosition(15,0,0));
         }
