@@ -367,7 +367,8 @@ SkillType NaoBehavior::attackplay()
     
     /************counts number of opponents within a certain distance of the on-ball player*******/
     int player_counter = 0;
-    for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
+    for(
+        int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
     {
         VecPosition temp;
         WorldObject* opponent = worldModel->getWorldObject( jj );
@@ -381,7 +382,7 @@ SkillType NaoBehavior::attackplay()
         } 
         WorldObject* closest = worldModel->getWorldObject( playerClosestToBall );   
         double distanceToplayer = temp.getDistanceTo(closest->pos);
-        if (distanceToplayer < 2) 
+        if (distanceToplayer < 1) 
         {
             player_counter++;    
         }
@@ -414,7 +415,7 @@ SkillType NaoBehavior::attackplay()
         }
 
         // passing to wingers
-        else if(opponent_counter < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && player_counter > 1)
+        else if(opponent_counter < 3 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && player_counter > 1)
         {
             VecPosition wingie = VecPosition(9,1,0);
             if(winger == RIGHT_FORWARD)
@@ -581,7 +582,10 @@ SkillType NaoBehavior::moveToOff()
         }
         WorldObject* teammate = worldModel->getWorldObject( LEFT_C_DEF );
         VecPosition left_pos = teammate->pos;
-        if(left_pos.getDistanceTo(targpos[3]) < left_pos.getDistanceTo(targpos[4]))
+        WorldObject* teammate2 = worldModel->getWorldObject( RIGHT_C_DEF );
+        VecPosition right_pos = teammate2->pos;
+
+        if(targpos[3].getDistanceTo(left_pos) < targpos[3].getDistanceTo(right_pos))
         {
             if(worldModel->getUNum() == LEFT_C_DEF)
             {
@@ -592,7 +596,7 @@ SkillType NaoBehavior::moveToOff()
                 target = targpos[4] + VecPosition(-0.5,0,0);
             }
         }
-        else if (left_pos.getDistanceTo(targpos[3]) > left_pos.getDistanceTo(targpos[4]))
+        else
         {
             if(worldModel->getUNum() == LEFT_C_DEF)
             {
