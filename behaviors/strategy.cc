@@ -393,7 +393,7 @@ SkillType NaoBehavior::attackplay()
     if(worldModel->getUNum() == playerClosestToBall)
     {
         // distance to goal less than 0.8 => use dribble to kick to goal
-        if(ball.getDistanceTo(VecPosition(15,0,0)) < 0.8)
+        if(ball.getDistanceTo(VecPosition(15,0,0)) < 1)
         {
             return kickBall(KICK_DRIBBLE,VecPosition(16,0,0));
         }
@@ -514,18 +514,21 @@ SkillType NaoBehavior::defenseplay()
     {
         return kickBall(KICK_LONG, VecPosition(16,0,0));
     }
-
     if(ball.getDistanceTo(VecPosition(-15,0,0)) < 9 && worldModel->getUNum() == LEFT_DEF)
     {
-        return goToTarget(ball);
+        return kickBall(KICK_DRIBBLE,VecPosition(15,0,0));
     }
     if(ball.getDistanceTo(VecPosition(-15,0,0)) < 7 && worldModel->getUNum() == RIGHT_DEF)
     {
-        return goToTarget(ball);
+        return kickBall(KICK_DRIBBLE,VecPosition(15,0,0));
     }
     if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5 && (worldModel->getUNum() == GOALKEEPER))
     {
-        return kickBall(KICK_LONG, VecPosition(15,0,0));
+        if(ball.getDistanceTo(VecPosition(-15,0,0)) > 1)
+        {
+            return kickBall(KICK_LONG, VecPosition(15,0,0));
+        }
+        else return kickBall(KICK_DRIBBLE,VecPosition(15,0,0));
     }
     else return moveToOff();
 }
