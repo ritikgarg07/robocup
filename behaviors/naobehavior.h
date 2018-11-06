@@ -239,6 +239,9 @@ protected:
     SkillType stay();
     SkillType kickin();
     SkillType kickin_opp();
+    int onballplayer();
+    int opponentgk();
+    VecPosition getpositionus(int player_number);
 
 public:
 

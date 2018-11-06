@@ -12,3 +12,5 @@
 12) better marking?
 13) make sure BOD players don't interfere with our own kick
 14) use/test kick_ik
+15) more players for attacking
+16) fix player going to wing position										Ritik		done
