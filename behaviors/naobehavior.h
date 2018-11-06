@@ -226,7 +226,7 @@ protected:
     double getStdNameParameter(const SkillType kick_skill, const std::string& parameter);
     void getSkillsForKickType(int kickType, SkillType skillsForType[]);
 
-    SkillType moveToOff();
+    SkillType moveToOff(int playstyle);
     SkillType twomanpass();
     SkillType threeManFigure8withoutmovement();
     SkillType threeManWeave();
@@ -241,8 +241,12 @@ protected:
     SkillType kickin_opp();
     int onballplayer();
     int opponentgk();
+    int opponentball();
     VecPosition getposition(int player_number);
     int opponentcount(VecPosition a, double distance);
+    bool posession();
+    double modulus(VecPosition a);
+
 
 public:
 
