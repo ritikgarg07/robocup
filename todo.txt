@@ -9,3 +9,6 @@
 9) kickoff setpiece, ie- kinda passing      								Aryaman 	done
 10) passing
 11) goalkick, player moves to target of goal 								Aryaman 	done
+12) better marking?
+13) make sure BOD players don't interfere with our own kick
+14) use/test kick_ik
