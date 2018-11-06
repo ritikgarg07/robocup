@@ -239,7 +239,7 @@ bool NaoBehavior::posession()    // player closest distanceis 0.4 , closest oppo
     int opponent = opponentball();
     double closestDistanceOpp = ball.getDistanceTo(getposition(opponent));
 
-    if(closestDistance <= 0.4 && closestDistanceOpp >= 0.8 && !(worldModel->getFallenTeammate(playerClosestToBall)))
+    if(closestDistance <= 0.8 && closestDistanceOpp >= 0.8 && !(worldModel->getFallenTeammate(playerClosestToBall)))
     {
         return true;
     }
@@ -406,6 +406,7 @@ SkillType NaoBehavior::kickoff(double time)
 
 SkillType NaoBehavior::attackplay()
 {
+
     int playerClosestToBall = onballplayer();
     
     /******calculates 'offset' based on gk position************/
