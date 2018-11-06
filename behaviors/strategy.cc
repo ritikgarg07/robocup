@@ -170,6 +170,30 @@ VecPosition NaoBehavior::getposition(int player_number)
     return temp;
 }
 
+int NaoBehavior::opponentcount(VecPosition a, double distance)
+{
+    int opponent_counter = 0;
+    for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
+    {
+        VecPosition temp;
+        WorldObject* opponent = worldModel->getWorldObject( jj );
+        if (opponent->validPosition) 
+        {
+            temp = opponent->pos;
+        }
+        else 
+        {
+            continue;
+        } 
+        double distanceToplayer = temp.getDistanceTo(a);
+        if (distanceToplayer < distance) 
+        {
+            opponent_counter++;    
+        }
+    }    
+    return opponent_counter;    
+}
+
 SkillType NaoBehavior::selectSkill() 
 {
     // My position and angle
@@ -214,18 +238,13 @@ SkillType NaoBehavior::selectSkill()
     // Walk to ball while always facing forward
     // return goToTargetRelative(worldModel->g2l(ball), -worldModel->getMyAngDeg());
 
-    // Dribble ball toward opponent's goal
     // return kickBall(KICK_DRIBBLE, VecPosition(HALF_FIELD_X, 0, 0));
 
-    // Kick ball toward opponent's goal
     // return kickBall(KICK_FORWARD, VecPosition(0, 0, 0)); // Basic kick
     // return kickBall(KICK_IK, VecPosition(HALF_FIELD_X, 0, 0)); // IK kick
 
-    // Just stand in place
     // return SKILL_STAND;
-
-    // Demo behavior where players form a rotating circle and kick the ball
-    // back and forth
+    
     // return demoKickingCircle();
     // return threemanpass();
     // return testing();
@@ -298,7 +317,11 @@ SkillType NaoBehavior::selectSkill()
 
 SkillType NaoBehavior::testing()
 { 
-    return SKILL_STAND;
+    if(worldModel->getUNum() == CENTRE_FORWARD)
+    {
+        return kickBall(KICK_IK,VecPosition(15,0,0));
+    }
+    else return SKILL_STAND;
 }
 
 SkillType NaoBehavior::stay()
@@ -338,7 +361,7 @@ SkillType NaoBehavior::attackplay()
     {
         offset = 1;
     }
-    /*****************************/
+    /**********************************************************/
 
     /**********sends the farther of left/right forward as a 'winger'*************/
     static int winger = -1;
@@ -355,51 +378,11 @@ SkillType NaoBehavior::attackplay()
     }
     /*******************************************************************************/
 
-    /*******counts number of oppenents within a certain distance  2 of the winger***/
-    int opponent_counter_winger = 0;
-    for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
-    {
-        VecPosition temp;
-        WorldObject* opponent = worldModel->getWorldObject( jj );
-        if (opponent->validPosition) 
-        {
-            temp = opponent->pos;
-        }
-        else 
-        {
-            continue;
-        }    
-        double distanceTowinger = temp.getDistanceTo(getposition(winger));
-        if (distanceTowinger < 2) 
-        {
-            opponent_counter_winger++;    
-        }
-    }
-    /******************************************************************************/
+    /*******counts number of opponents within a certain distance  2 of the winger***/
+    int opponent_counter_winger = opponentcount(getposition(winger),2);
     
     /************counts number of opponents within a certain distance 1 of the on-ball player*******/
-    int opponent_counter_onball = 0;
-    for(
-        int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
-    {
-        VecPosition temp;
-        WorldObject* opponent = worldModel->getWorldObject( jj );
-        if (opponent->validPosition) 
-        {
-            temp = opponent->pos;
-        }
-        else 
-        {
-            continue;
-        } 
-        double distanceToplayer = temp.getDistanceTo(getposition(playerClosestToBall));
-        if (distanceToplayer < 1) 
-        {
-            opponent_counter_onball++;    
-        }
-    }    
-    /**********************************************************************************************/
-
+    int opponent_counter_onball = opponentcount(getposition(playerClosestToBall),1);
 
     if(worldModel->getUNum() == playerClosestToBall)
     {
@@ -409,7 +392,7 @@ SkillType NaoBehavior::attackplay()
             return kickBall(KICK_IK,VecPosition(16,0,0));
         }
         
-        // distance to goal less than 4 => use short kick to kick to goal
+        // distance to goal more than 2 less than 4 => use short kick to kick to goal
         else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 4)    
         {
             VecPosition shoot_goal = VecPosition(16,0,0);

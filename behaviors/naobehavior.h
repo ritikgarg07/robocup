@@ -242,6 +242,7 @@ protected:
     int onballplayer();
     int opponentgk();
     VecPosition getposition(int player_number);
+    int opponentcount(VecPosition a, double distance);
 
 public:
 
