@@ -239,7 +239,7 @@ bool NaoBehavior::posession()    // player closest distanceis 0.4 , closest oppo
     int opponent = opponentball();
     double closestDistanceOpp = ball.getDistanceTo(getposition(opponent));
 
-    if(closestDistance <= 0.8 && closestDistanceOpp >= 0.8 && !(worldModel->getFallenTeammate(playerClosestToBall)))
+    if(closestDistance <= 0.8 && closestDistanceOpp >= 0.8) // && !(worldModel->getFallenTeammate(playerClosestToBall))
     {
         return true;
     }
@@ -588,8 +588,9 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
             {
                 if(worldModel->getUNum() != playerClosestToBall)
                 {
+                    //check angle of rotation
                     VecPosition target_dir = (VecPosition(15,0,0) - ball)*(1/modulus(VecPosition(15,0,0) - ball));
-                    target  = ball + ((target_dir).rotateAboutZ(10*worldModel->getUNum()));                    
+                    target  = ball + ((target_dir).rotateAboutZ(5*worldModel->getUNum()));                    
                     target = collisionAvoidance(false /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
                 }
                 else 
@@ -604,7 +605,7 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
                 {
 
                     VecPosition target_dir = (VecPosition(-15,0,0) - ball)*(1.0/(modulus(VecPosition(-15,0,0) - ball)));
-                    target  = ball + ((target_dir).rotateAboutZ(10*worldModel->getUNum()));
+                    target  = ball + ((target_dir).rotateAboutZ(5*worldModel->getUNum()));
                     target  = ((VecPosition(-15,0,0) - ball).rotateAboutZ(15));                    
                     target = collisionAvoidance(false /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
                 }
