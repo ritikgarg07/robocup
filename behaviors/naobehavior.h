@@ -241,7 +241,7 @@ protected:
     SkillType kickin_opp();
     int onballplayer();
     int opponentgk();
-    VecPosition getpositionus(int player_number);
+    VecPosition getposition(int player_number);
 
 public:
 
