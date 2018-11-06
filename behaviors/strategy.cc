@@ -3,6 +3,9 @@
 #include "../rvdraw/rvdraw.h"
 #include <cmath>
 
+extern int agentBodyType;
+
+
 
 enum Players
     {
@@ -247,7 +250,7 @@ SkillType NaoBehavior::selectSkill()
     
     // return demoKickingCircle();
     // return threemanpass();
-    // return testing();
+    return testing();
     static double startTime = worldModel->getTime();    
     if(((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)))
     {
@@ -317,9 +320,9 @@ SkillType NaoBehavior::selectSkill()
 
 SkillType NaoBehavior::testing()
 { 
-    if(worldModel->getUNum() == CENTRE_FORWARD)
+    if(agentBodyType == 4)
     {
-        return kickBall(KICK_IK,VecPosition(15,0,0));
+        return kickBall(KICK_LONG,VecPosition(15,0,0));
     }
     else return SKILL_STAND;
 }
@@ -328,6 +331,7 @@ SkillType NaoBehavior::stay()
 {
     return SKILL_STAND;
 }
+
 
 SkillType NaoBehavior::kickoff(double time)
 {
