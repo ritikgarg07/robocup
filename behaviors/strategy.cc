@@ -378,7 +378,11 @@ SkillType NaoBehavior::selectSkill()
         {
             return goToTarget(VecPosition(0,0,0));
         }
-         else return stay();               // needs to be changed so that players don't move to the ball and kick it
+        else if(worldModel->getUNum() != RIGHT_DEF || worldModel->getUNum() != LEFT_DEF)
+        {
+            return stay();               // needs to be changed so that players don't move to the ball and kick it
+        }
+        else return moveToOff(DEFENSE_PLAY);
     }
     else if((worldModel->getPlayMode() == PM_CORNER_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_CORNER_KICK_RIGHT && worldModel->getSide() == SIDE_RIGHT))
     {
@@ -636,7 +640,6 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
                 else 
                 {
                     target = ball;
-                    target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
                 }
             }
             else if(Playstyle == DEFENSE_PLAY)
@@ -651,7 +654,6 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
                 else 
                 {
                     target = ball;
-                    target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
                 }
             }
             else 
