@@ -469,9 +469,7 @@ SkillType NaoBehavior::attackplay()
     }
     /*******************************************************************************/
 
-    int opponent_counter_winger = opponentcount(getposition(winger),2);
-    int opponent_counter_onball = opponentcount(getposition(playerClosestToBall),2);
-
+    
     if(worldModel->getUNum() == playerClosestToBall)
     {
         // distance to goal less than 2 => use kick_ik to kick to goal
@@ -503,27 +501,28 @@ SkillType NaoBehavior::attackplay()
             {
                 return kickBall(KICK_LONG,shoot_goal);
             }
+
+            //passing to wingers
+            else if(opponentcount(getposition(winger),2) < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && opponentcount(getposition(playerClosestToBall),2) > 1)
+
+            {
+                VecPosition winger_pos = VecPosition(9,1,0);
+                if(winger == RIGHT_FORWARD)
+                    winger_pos.setY(-1);
+
+
+                if (me.getDistanceTo(VecPosition(9,0,0)) < 2)
+                {
+                    return kickBall(KICK_IK,winger_pos);
+                }
+                else if (me.getDistanceTo(VecPosition(9,0,0)) < 5)
+                {
+                    return kickBall(KICK_FORWARD,winger_pos);
+                }
+                else return kickBall(KICK_LONG,winger_pos);
+            }    
             else return kickBall(KICK_DRIBBLE,shoot_goal);
         }
-
-        // passing to wingers
-        else if(opponentcount(getposition(winger),2) < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && opponentcount(getposition(playerClosestToBall),2) > 1)
-        {
-            VecPosition winger_pos = VecPosition(9,1,0);
-            if(winger == RIGHT_FORWARD)
-                winger_pos.setY(-1);
-
-
-            if (me.getDistanceTo(VecPosition(9,0,0)) < 2)
-            {
-                return kickBall(KICK_IK,winger_pos);
-            }
-            else if (me.getDistanceTo(VecPosition(9,0,0)) < 5)
-            {
-                return kickBall(KICK_FORWARD,winger_pos);
-            }
-            else return kickBall(KICK_LONG,winger_pos);
-        }    
 
         // dribble to goal     
         else return kickBall(KICK_DRIBBLE, VecPosition(16,0,0)); 
