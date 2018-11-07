@@ -1,7 +1,7 @@
-#include "naobehavior.h"
-// #include "scram.h"
-#include "../rvdraw/rvdraw.h"
 #include <cmath>
+#include "naobehavior.h"
+#include "../rvdraw/rvdraw.h"
+// #include "scram.h"
 
 extern int agentBodyType;
 
@@ -272,8 +272,8 @@ bool NaoBehavior::posession()    // player closest distanceis 0.4 , closest oppo
     int opponent = opponentball();
     double closestDistanceOpp = ball.getDistanceTo(getposition(opponent));
 
-    if(closestDistance <= 0.6 && closestDistanceOpp >= 1 && !(worldModel->getFallenTeammate(playerClosestToBall))
-)   {
+    if(closestDistance <= 0.6 && closestDistanceOpp >= 1 && !(worldModel->getFallenTeammate(playerClosestToBall)))
+       {
         return true;
     }
     else return false;
