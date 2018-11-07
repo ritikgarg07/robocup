@@ -1,5 +1,6 @@
-SkillType NaoBehavior::threemanpass(int counter) 
+SkillType NaoBehavior::threemanpass() 
 {
+
     enum Players
     {
         buffer,             // 0
@@ -37,124 +38,167 @@ SkillType NaoBehavior::threemanpass(int counter)
     /***********************************/
 
 
-    VecPosition kick_next = VecPosition(0,0,0);
-    VecPosition move_next = VecPosition(0,0,0);
+    double distance = 6;         // distance for hitting the ball
+    float angle = 20;           // (IN DEGREES)
+    float angle_rad = angle*M_PI/180;
+    
+    /**************determining positions***********/
+    VecPosition threemanpass_position[25];
+    threemanpass_position[0] = VecPosition(0,0,0);
+    
+    static int counter_centre = 0;
+    static int counter_left = 1;
+    static int counter_right = 2;
+
+    threemanpass_position[1].setX(threemanpass_position[0].getX() + distance*cos(M_PI/4));
+    threemanpass_position[1].setY(threemanpass_position[0].getY() + distance*sin(M_PI/4));
+    threemanpass_position[1].setZ(0);
+    for (int ii = 2; ii < 25; ii++)
+    {
+        threemanpass_position[ii].setX(threemanpass_position[ii - 1].getX() + distance*sin(angle_rad));
+        threemanpass_position[ii].setY(threemanpass_position[ii-1].getY() + (pow(-1,(ii-1)%2))*distance*cos(angle_rad));
+        threemanpass_position[ii].setZ(0);            
+    }        
+    /**************************************************/
+
+    /***************checking whose turn it is to kick the ball************/
+
+    int player_to_kick = 0;
+    double shortest_distance = 100;
+    int index_of_pos = 0;
+    for (int ii = 0; ii < 25; ii++)
+    {
+        if(threemanpass_position[ii].getDistanceTo(ball) <= shortest_distance)
+        {
+            shortest_distance = threemanpass_position[ii].getDistanceTo(ball);
+            index_of_pos = ii;
+        }
+    }
+    switch(index_of_pos%3)
+        {
+            case 0: player_to_kick = PLAYER_CENTRE;
+                    break;
+            case 1: player_to_kick = PLAYER_LEFT;
+                    break;
+            case 2: player_to_kick = PLAYER_RIGHT;
+                    break;
+            default: player_to_kick = 0;
+        }
+    /***********************************************************************/
+
 
     if (worldModel->getUNum() == PLAYER_CENTRE)
     {
-        switch(counter)
-        {
-            case 0: if(worldModel->getUNum() == playerClosestToBall)
-                        {
-                            return kickBall(KICK_FORWARD, VecPosition((3,-3,0)));
-                        }
-                    else
-                        {
-                            //return goToTarget(VecPosition(8,-2,0));    
-                            return goToTarget(collisionAvoidance(true /*teammate*/, false/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/,VecPosition(8,-2,0), true/*keepDistance*/));
-                        }
-                    break;       
+        static int kicked_centre = 0;
+        if(player_to_kick == PLAYER_CENTRE)
+        {    
+            kicked_centre = 1;            
+            return kickBall(KICK_FORWARD,threemanpass_position[counter_centre + 1]);
         }
-    }
-
-
-    else if (worldModel->getUNum() == PLAYER_RIGHT)
-    {
-        switch(counter)
+        else
         {
-            case 0: if(worldModel->getUNum() == playerClosestToBall)
-                        {
-                            return kickBall(KICK_FORWARD,VecPosition((6,2,0)));
-                        }
-                    else
-                        {
-                            return goToTarget(VecPosition(3,-3,0));    
-                        }
-                        break;
+            static VecPosition go_to = (0,0,0);
+            if (kicked_centre == 1)         
+            {
+                kicked_centre = 0;
+                go_to = threemanpass_position[counter_centre + 1] + VecPosition(0,0.5*pow(-1,counter_centre),0);
+                counter_centre = counter_centre + 3;               
+            }
+
+            if (counter_centre != 0)
+            { 
+                static int reached_go_to = 0;
+                if (me.getDistanceTo(go_to) < 1)
+                {   
+                    reached_go_to = 1;
+                }   
+                if (reached_go_to == 1)
+                {             
+                    return goToTarget(collisionAvoidance(true, false, true, 1, .5,threemanpass_position[counter_centre], true));
+                }
+                else 
+                {
+                    return goToTarget(collisionAvoidance(true, false, true, 1, .5,go_to, true));
+                }
+            }
+            else return goToTarget(threemanpass_position[0]);
         }
     }
 
     else if (worldModel->getUNum() == PLAYER_LEFT)
     {
-        switch(counter)
+        static int kicked_left = 0;
+        if(player_to_kick == PLAYER_LEFT)
         {
-            case 0: if(worldModel->getUNum() == playerClosestToBall)
-                        {
-                            return kickBall(KICK_FORWARD, VecPosition(8,-2,0));
-                        }
-                    else
-                        {
-                            return goToTarget(VecPosition(6,2,0));    
-                        }           
-                    break;           
+            kicked_left = 1;          
+            return kickBall(KICK_FORWARD,threemanpass_position[counter_left + 1]);
         }
+        else
+        {               
+            static VecPosition go_to = (0,0,0);
+            if (kicked_left == 1)
+            {
+                kicked_left = 0;
+                go_to = threemanpass_position[counter_left + 1] + VecPosition(0,0.5*pow(-1,counter_left),0);
+                counter_left = counter_left + 3;                
+            }
+
+            if (counter_left != 1)
+            {                
+                static int reached_go_to = 0;
+                if (me.getDistanceTo(go_to) < 1)
+                {   
+                    reached_go_to = 1;
+                }   
+                if (reached_go_to == 1)
+                {             
+                    return goToTarget(collisionAvoidance(true, false, true, 1, .5,threemanpass_position[counter_left], true));
+                }
+                else 
+                {
+                    return goToTarget(collisionAvoidance(true, false, true, 1, .5,go_to, true));
+                }
+            }
+            else return goToTarget(threemanpass_position[1]);
+        }        
     }
 
-    else 
+    else if (worldModel->getUNum() == PLAYER_RIGHT)
     {
-        // default case
-        return SKILL_STAND;
+        static int kicked_right = 0;
+        if(player_to_kick == PLAYER_RIGHT)
+        {
+            kicked_right = 1;            
+            return kickBall(KICK_FORWARD,threemanpass_position[counter_right + 1]);
+        }
+        else
+        {
+            static VecPosition go_to = (0,0,0);
+            if (kicked_right == 1)
+            {
+                kicked_right = 0;
+                go_to = threemanpass_position[counter_right + 1] + VecPosition(0,0.5*pow(-1,counter_right),0);
+                counter_right = counter_right + 3;
+            }
+
+            if (counter_right != 2)
+            {                
+                static int reached_go_to = 0;
+                if (me.getDistanceTo(go_to) < 1)
+                {   
+                    reached_go_to = 1;
+                }   
+                if (reached_go_to == 1)
+                {             
+                    return goToTarget(collisionAvoidance(true, false, true, 1, .5,threemanpass_position[counter_right], true));
+                }
+                else 
+                {
+                    return goToTarget(collisionAvoidance(true, false, true, 1, .5,go_to, true));
+                }
+            }
+            else return(goToTarget(threemanpass_position[2]));
+        }    
     }
+    else return SKILL_STAND;
 }
-
-
-/*
-    if (worldModel->getUNum() == PLAYER_CENTRE)
-    {
-        switch(counter)
-        {
-            case 0: if(worldModel->getUNum() == playerClosestToBall)
-                        {
-                            return kickBall(KICK_FORWARD, VecPosition((3,-3,0)));
-                        }
-                    else
-                        {
-                            return goToTarget(VecPosition(8,-2,0));    
-                        }
-                    break;
-            default: return goToTarget(VecPosition(-5,5,0));    
-        }
-    }
-
-
-    else if (worldModel->getUNum() == PLAYER_RIGHT)
-    {
-        switch(counter)
-        {
-            case 0: if(worldModel->getUNum() == playerClosestToBall)
-                        {
-                            return kickBall(KICK_FORWARD,VecPosition((6,2,0)));
-                        }
-                    else
-                        {
-                            return goToTarget(VecPosition(3,-3,0));    
-                        }
-                    break;
-            default: return goToTarget(VecPosition(5,5,0));
-        }
-    }
-
-    else if (worldModel->getUNum() == PLAYER_LEFT)
-    {
-        switch(counter)
-        {
-            case 0: if(worldModel->getUNum() == playerClosestToBall)
-                        {
-                            return kickBall(KICK_FORWARD, VecPosition(8,-2,0));
-                        }
-                    else
-                        {
-                            return goToTarget(VecPosition(6,2,0));    
-                        }           
-                    break;
-            case 1: return SKILL_STAND;  
-            default: return goToTarget(VecPosition(10,0,0));
-        }
-    }
-
-    else 
-    {
-        // default case
-        return SKILL_STAND;
-    }
-    */

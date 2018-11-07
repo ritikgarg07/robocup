@@ -231,7 +231,7 @@ protected:
     SkillType threeManFigure8withoutmovement();
     SkillType threeManWeave();
     SkillType demoKickingCircle();
-    SkillType threemanpass();
+    // SkillType threemanpass();
     SkillType kickoff(double time);
     SkillType testing();
     SkillType attackplay();
