@@ -142,6 +142,38 @@ int NaoBehavior::onballplayer()
     return playerClosestToBall; 
 }
 
+int NaoBehavior::opponentattacker()           // returns closest opponent to our goal
+{
+    // Find closest player to our goal
+    int opponentClosestToGoal = -1;
+    double closestDistanceToGoal = 10000;
+    for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1+NUM_AGENTS; ++jj) 
+    {
+        VecPosition temp;
+        WorldObject* opponent = worldModel->getWorldObject( jj );
+        if (opponent->validPosition) 
+        {
+            temp = opponent->pos;
+        }
+        else 
+        {
+            continue;
+        }
+    
+        double distanceToGoal = temp.getDistanceTo(VecPosition(-15,0,0));
+        if (distanceToGoal < closestDistanceToGoal) 
+        {
+            opponentClosestToGoal = jj;
+            closestDistanceToGoal = distanceToGoal;
+        }
+    }
+    /***********************************/
+    return opponentClosestToGoal;
+
+}
+
+
+
 int NaoBehavior::opponentgk()           // returns closest opponent to where we want to score a goal
 {
     // Find closest player to opponent goal
@@ -564,7 +596,7 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
     
     if(worldModel->getUNum() == LEFT_C_DEF)
     {
-        targpos[3] = getposition(opponentgk());                 // change this to attacked closest to our goal
+        targpos[3] = getposition(opponentattacker());                 // change this to attacker closest to our goal
         target = targpos[3];
     }
     if (worldModel->getUNum() == GOALKEEPER)
