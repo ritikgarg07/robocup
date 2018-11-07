@@ -558,7 +558,7 @@ SkillType NaoBehavior::defenseplay()
         {
             return kickBall(KICK_LONG, VecPosition(15,0,0));
         }
-        else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 2)
+        else if(opponentcount(ball,2) > 0 && ball.getDistanceTo(VecPosition(-15,0,0)) < 2)
         {
             return kickBall(KICK_IK,VecPosition(16,0,0));
         }
@@ -629,35 +629,47 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
             {
                 if(worldModel->getUNum() != playerClosestToBall)
                 {
-                    //check angle of rotation
-                    VecPosition target_dir = (VecPosition(15,0,0) - ball)*(1/modulus(VecPosition(15,0,0) - ball));
-                    target  = ball + ((target_dir).rotateAboutZ(15 + 5*worldModel->getUNum()));                    
-                    target = collisionAvoidance(false /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+                    if(ball.getDistanceTo(opponentball()) < ball.getDistanceTo(onballplayer()))
+                    {
+                        target = ball;
+                    }
+                    else
+                    {
+                        //check angle of rotation
+                        VecPosition target_dir = (VecPosition(15,0,0) - ball)*(1/modulus(VecPosition(15,0,0) - ball));
+                        target  = ball + ((target_dir).rotateAboutZ(15 + 5*worldModel->getUNum()));                    
+                    }
                 }
                 else 
                 {
                     target = ball;
                 }
             }
-            else if(Playstyle == DEFENSE_PLAY)
+        else if(Playstyle == DEFENSE_PLAY)
+        {
+            if(worldModel->getUNum() != playerClosestToBall)
             {
-                if(worldModel->getUNum() != playerClosestToBall)
-                {
 
-                    VecPosition target_dir = (VecPosition(15,0,0) - ball)*(1.0/(modulus(VecPosition(15,0,0) - ball)));
-                    target  = ball + ((target_dir).rotateAboutZ(5*worldModel->getUNum()));
-                    target = collisionAvoidance(false /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
-                }
-                else 
+                if(ball.getDistanceTo(opponentball()) < ball.getDistanceTo(onballplayer()))
                 {
                     target = ball;
+                }
+                else
+                {
+                    VecPosition target_dir = (VecPosition(15,0,0) - ball)*(1.0/(modulus(VecPosition(15,0,0) - ball)));
+                    target  = ball + ((target_dir).rotateAboutZ(5*worldModel->getUNum()));
                 }
             }
             else 
             {
                 target = ball;
-                target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
             }
+        }
+        else 
+        {
+            target = ball;
+            target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+        }
         
     }
     return goToTarget(target);
