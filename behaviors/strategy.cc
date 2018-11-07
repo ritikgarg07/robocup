@@ -660,7 +660,7 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
         }
         else
         { 
-            target = target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+            target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
         }
     }
     return goToTarget(target);
