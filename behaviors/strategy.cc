@@ -598,6 +598,10 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
     {
         targpos[3] = getposition(opponentattacker());                 
         target = targpos[3];
+        if(target.getDistanceTo(VecPosition(-15,0,0)) > 10)
+        {
+            return goToTarget(VecPosition(-10,0,0));
+        }
         if(me.getDistanceTo(ball) > 2)
         {
             target = collisionAvoidance(false /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
@@ -626,7 +630,7 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
                 {
                     //check angle of rotation
                     VecPosition target_dir = (VecPosition(15,0,0) - ball)*(1/modulus(VecPosition(15,0,0) - ball));
-                    target  = ball + ((target_dir).rotateAboutZ(5*worldModel->getUNum()));                    
+                    target  = ball + ((target_dir).rotateAboutZ(15 + 5*worldModel->getUNum()));                    
                     target = collisionAvoidance(false /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
                 }
                 else 
