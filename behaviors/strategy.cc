@@ -43,11 +43,11 @@ void NaoBehavior::beam( double& beamX, double& beamY, double& beamAngle ) {
     {
         case LEFT_FORWARD:
             beamX = -1;
-            beamY = 4;
+            beamY = 6;
             break;
         case RIGHT_FORWARD:
             beamX = -1;
-            beamY = -4;
+            beamY = -6;
             break;
         case CENTRE_FORWARD:
             beamX = -1;
@@ -429,13 +429,13 @@ SkillType NaoBehavior::kickoff(double time)
     if(worldModel->getUNum() == CENTRE_FORWARD)
     {
         //kick to left forward or right ehhhh
-        VecPosition temp = getposition(LEFT_FORWARD);
+        VecPosition temp = getposition(RIGHT_FORWARD);
         temp = temp + VecPosition(1,0,0);
         return kickBall(KICK_FORWARD, temp);
     }
-    if(worldModel->getUNum() == LEFT_FORWARD && (time>1))           
+    if(worldModel->getUNum() == RIGHT_FORWARD && (time>1))           
     {
-        return kickBall(KICK_LONG, VecPosition(15,0.7,0));
+        return kickBall(KICK_LONG, VecPosition(15,-0.7,0));
     }
     return SKILL_STAND;
 }
