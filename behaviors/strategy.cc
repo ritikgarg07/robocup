@@ -353,11 +353,7 @@ SkillType NaoBehavior::selectSkill()
     }
     else if ((worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_RIGHT))
     {
-        if(worldModel->getUNum() == LEFT_DEF || worldModel->getUNum() == RIGHT_DEF)
-        {
-            return moveToOff(GENERAL);
-        }
-        else return stay();
+        return moveToOff(GENERAL);
     }
     
     else if((worldModel->getPlayMode() == PM_KICK_IN_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_IN_RIGHT && worldModel->getSide() == SIDE_RIGHT))
@@ -474,7 +470,7 @@ SkillType NaoBehavior::attackplay()
     /*******************************************************************************/
 
     int opponent_counter_winger = opponentcount(getposition(winger),2);
-    int opponent_counter_onball = opponentcount(getposition(playerClosestToBall),1);
+    int opponent_counter_onball = opponentcount(getposition(playerClosestToBall),2);
 
     if(worldModel->getUNum() == playerClosestToBall)
     {
@@ -490,7 +486,7 @@ SkillType NaoBehavior::attackplay()
             VecPosition shoot_goal = VecPosition(16,0,0);
             shoot_goal.setY(offset);
             shoot_goal.setZ(0);
-            if(opponent_counter_onball < 3)
+            if(opponentcount(getposition(playerClosestToBall),2) < 1)
             {
                 return kickBall(KICK_FORWARD,shoot_goal);
             }
@@ -503,7 +499,7 @@ SkillType NaoBehavior::attackplay()
             VecPosition shoot_goal = VecPosition(16,0,0);
             shoot_goal.setY(offset);
             shoot_goal.setZ(0);
-            if(opponent_counter_onball == 0)
+            if(opponentcount(getposition(playerClosestToBall),1) == 0)
             {
                 return kickBall(KICK_LONG,shoot_goal);
             }
@@ -511,7 +507,7 @@ SkillType NaoBehavior::attackplay()
         }
 
         // passing to wingers
-        else if(opponent_counter_winger < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && opponent_counter_winger > 1)
+        else if(opponentcount(getposition(winger),2) < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && opponentcount(getposition(playerClosestToBall),2) > 1)
         {
             VecPosition winger_pos = VecPosition(9,1,0);
             if(winger == RIGHT_FORWARD)
