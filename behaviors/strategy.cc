@@ -54,11 +54,11 @@ void NaoBehavior::beam( double& beamX, double& beamY, double& beamAngle ) {
             beamY = 0;
             break;
         case LEFT_MID:
-            beamX = -0.5;
+            beamX = -5;
             beamY = 5;
             break;
         case RIGHT_MID:
-            beamX = -0.5;
+            beamX = -5;
             beamY = -5;
             break;
         case CENTRE_MID:
@@ -70,16 +70,16 @@ void NaoBehavior::beam( double& beamX, double& beamY, double& beamAngle ) {
             beamY = 0.85;
             break;
         case LEFT_C_DEF:
-            beamX = -0.5;
-            beamY = 7;
+            beamX = -10;
+            beamY = 4;
             break;
         case RIGHT_DEF:
             beamX = -14.5;
             beamY = -0.85;
             break;
         case RIGHT_C_DEF:
-            beamX = -0.5;
-            beamY = -7;
+            beamX = -10;
+            beamY = -4;
             break;
         case GOALKEEPER:
             beamX = -14.5;
