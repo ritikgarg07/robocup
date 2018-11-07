@@ -559,6 +559,10 @@ SkillType NaoBehavior::defenseplay()
         {
             return kickBall(KICK_LONG, VecPosition(15,0,0));
         }
+        else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 2)
+        {
+            return kickBall(KICK_IK,VecPosition(16,0,0));
+        }
         else return kickBall(KICK_DRIBBLE, VecPosition(16,0,0));
     }
     if(ball.getDistanceTo(VecPosition(-15,0,0)) < 9 && worldModel->getUNum() == LEFT_DEF)
