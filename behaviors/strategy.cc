@@ -417,7 +417,7 @@ SkillType NaoBehavior::testing()
 SkillType NaoBehavior::stay()
 {
     return SKILL_STAND;
-}s
+}
 
 SkillType NaoBehavior::kickoff(double time)
 {
@@ -598,6 +598,10 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
     {
         targpos[3] = getposition(opponentattacker());                 // change this to attacker closest to our goal
         target = targpos[3];
+        if(me.getDistanceTo(ball) > 2)
+        {
+            target = collisionAvoidance(false /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+        }
     }
     if (worldModel->getUNum() == GOALKEEPER)
     {   
