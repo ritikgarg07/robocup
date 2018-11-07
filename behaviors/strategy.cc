@@ -625,9 +625,7 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
     else if(worldModel->getUNum() != LEFT_C_DEF)
     {
         target = ball;
-        if(posession() == true)
-        {
-            if(Playstyle == ATTACK_PLAY)
+        if(Playstyle == ATTACK_PLAY)
             {
                 if(worldModel->getUNum() != playerClosestToBall)
                 {
@@ -660,11 +658,7 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
                 target = ball;
                 target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
             }
-        }
-        else
-        { 
-            target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
-        }
+        
     }
     return goToTarget(target);
 }
