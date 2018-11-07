@@ -42,12 +42,12 @@ void NaoBehavior::beam( double& beamX, double& beamY, double& beamAngle ) {
     switch(worldModel->getUNum())
     {
         case LEFT_FORWARD:
-            beamX = -.1;
-            beamY = 6;
+            beamX = -1;
+            beamY = 4;
             break;
         case RIGHT_FORWARD:
-            beamX = -.1;
-            beamY = -6;
+            beamX = -1;
+            beamY = -4;
             break;
         case CENTRE_FORWARD:
             beamX = -1;
@@ -347,7 +347,7 @@ SkillType NaoBehavior::selectSkill()
     {
         startTime = worldModel->getTime();
     }
-    if (((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)) || worldModel->getTime()-startTime < 10)
+    if (((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)) || worldModel->getTime()-startTime < 5)
     {
             return kickoff(worldModel->getTime() - startTime);
     }
