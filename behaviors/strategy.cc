@@ -272,8 +272,8 @@ bool NaoBehavior::posession()    // player closest distanceis 0.4 , closest oppo
     int opponent = opponentball();
     double closestDistanceOpp = ball.getDistanceTo(getposition(opponent));
 
-    if(closestDistance <= 0.8 && closestDistanceOpp >= 0.8) // && !(worldModel->getFallenTeammate(playerClosestToBall))
-    {
+    if(closestDistance <= 0.6 && closestDistanceOpp >= 1 && !(worldModel->getFallenTeammate(playerClosestToBall))
+)   {
         return true;
     }
     else return false;
@@ -378,7 +378,7 @@ SkillType NaoBehavior::selectSkill()
         {
             return goToTarget(VecPosition(0,0,0));
         }
-         else return moveToOff(GENERAL);               // needs to be changed so that players don't move to the ball and kick it
+         else return stay();               // needs to be changed so that players don't move to the ball and kick it
     }
     else if((worldModel->getPlayMode() == PM_CORNER_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_CORNER_KICK_RIGHT && worldModel->getSide() == SIDE_RIGHT))
     {
@@ -596,7 +596,7 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
     
     if(worldModel->getUNum() == LEFT_C_DEF)
     {
-        targpos[3] = getposition(opponentattacker());                 // change this to attacker closest to our goal
+        targpos[3] = getposition(opponentattacker());                 
         target = targpos[3];
         if(me.getDistanceTo(ball) > 2)
         {
