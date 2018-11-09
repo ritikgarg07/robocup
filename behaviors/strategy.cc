@@ -610,7 +610,58 @@ SkillType NaoBehavior::moveToOff(int Playstyle)
     return goToTarget(target);
 }
 
+VecPosition NaoBehavior::APF()
+{
+    double katt = 5;                                // placeholder value
+    double krep = 10;
+    double influence = 5;
+    
+    VecPosition target = VecPosition(15,0,0);
+    // VecPosition obstacle = VecPosition(0,0,0);
+    
+    VecPosition Fatt = VecPosition(0,0,0);
+    VecPosition Frep = VecPosition(0,0,0);
+    VecPosition Frep2 = VecPosition(0,0,0);
 
+
+    if(me.getDistanceTo(target) > katt)
+    {
+        Fatt = (worldModel->getMyPosition() - target)*(-1*katt);
+    }
+    else Fatt = (worldModel->getMyPosition() - target)*((1/modulus(worldModel->getMyPosition() - target))*(-8*katt/me.getDistanceTo(target)));
+    VecPosition Fnet = Fatt;
+    for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1 + NUM_AGENTS; ++jj)
+    {
+        VecPosition temp;
+        WorldObject* opponent = worldModel->getWorldObject( jj );
+        if (opponent->validPosition) 
+        {
+            temp = opponent->pos;
+        }
+        else 
+        {
+            continue;
+        } 
+        double distanceToplayer = me.getDistanceTo(temp);
+        if (distanceToplayer < influence) 
+        {
+            Frep2 = (worldModel->getMyPosition() - temp)*(krep/(me.getDistanceTo(temp)))*(1/distanceToplayer - 1/influence);
+            Frep.setX((worldModel->getMyPosition() - temp).getY()*(-1));
+            Frep.setY((worldModel->getMyPosition() - temp).getX());
+            if(Frep.getX() < 0)             // WORKS ONLY IF TARGET IS GOAL! (VERY SPECIFIC) TODO:IMPROVE
+            {       
+                Frep.setX(Frep.getX()*(-1));
+                Frep.setY(Frep.getY()*(-1));
+            }
+            Frep = Frep*(krep/me.getDistanceTo(temp));
+            Fnet += (Frep + Frep2);
+        }
+        else 
+            continue;
+    }    
+    VecPosition moveto = worldModel->getMyPosition() + Fnet;
+    return moveto;
+}
 
 /*
  * Demo behavior where players form a rotating circle and kick the ball

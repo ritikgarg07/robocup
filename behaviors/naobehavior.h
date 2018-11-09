@@ -249,6 +249,7 @@ protected:
     double modulus(VecPosition a);
     int ourClosest(VecPosition a);
     int oppClosest(VecPosition a);
+    VecPosition APF();
 
 
 
