@@ -1,3 +1,24 @@
+VecPosition get_centre(VecPosition A, VecPosition B, VecPosition C)     // A,B,C being points on circle
+{
+    VecPosition centre;
+    centre.setX( (((pow(A.getX(),2) + pow(A.getY(),2))*(B.getY() - C.getY())) + ((pow(B.getX(),2) + pow(B.getY(),2))*(C.getY() - A.getY())) + ((pow(C.getX(),2) + pow(C.getY(),2))*(A.getY() - B.getY())))/(2*(((A.getX())*(B.getY() - C.getY()))- ((A.getY())*(B.getX()-C.getX())) +  B.getX()*C.getY() - C.getX()*B.getY())));
+    
+    centre.setY( (( pow(A.getX(),2) + pow(A.getY(),2) )*(C.getX() - B.getX()) + (pow(B.getX(),2) + pow(B.getY(),2))*(A.getX() - C.getX())  +   (pow(C.getX(),2) + pow(C.getY(),2))*(B.getX() - A.getX())) /(2*(((A.getX())*(B.getY() - C.getY()))- ((A.getY())*(B.getX()-C.getX())) +  B.getX()*C.getY() - C.getX()*B.getY())));
+    
+    centre.setZ(0);
+
+    return centre;
+}
+
+float get_radius(VecPosition centre, VecPosition A)
+{
+    // Vecposition A == Vecposition of a point on the CIRCLE
+    return centre.getDistanceTo(A);
+}
+
+
+
+
 SkillType NaoBehavior::threemanpass() 
 {
 

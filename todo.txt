@@ -16,3 +16,7 @@
 16) fix player going to wing position										Ritik		done
 17) improve posession function
 18) add target selection in defense players 								
+19) APF																		Ritik		done
+20) Change conditions in attackplay from no.of opp to closest opp distance 	Ritik		
+21) Add gk behaviour(based on ball velocity)
+22)remove players from BOD
