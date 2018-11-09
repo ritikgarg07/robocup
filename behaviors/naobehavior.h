@@ -247,6 +247,8 @@ protected:
     int opponentcount(VecPosition a, double distance);
     bool posession();
     double modulus(VecPosition a);
+    int ourClosest(VecPosition a);
+    int oppClosest(VecPosition a);
 
 
 
