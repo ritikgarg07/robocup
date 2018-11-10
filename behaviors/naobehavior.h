@@ -250,6 +250,7 @@ protected:
     int ourClosest(VecPosition a);
     int oppClosest(VecPosition a);
     VecPosition APF(VecPosition target);
+    VecPosition ballgoal();
 
 
 
