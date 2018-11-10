@@ -663,19 +663,19 @@ SkillType NaoBehavior::defenseplay()
         {
             return kickBall(KICK_IK,VecPosition(16,0,0));
         }
-
         else return kickBall(KICK_DRIBBLE, VecPosition(16,0,0));
     }
-    else if(worldModel->getUNum() == GOALKEEPER && playerClosestToBall == GOALKEEPER && ((me.getDistanceTo(ball) + 1) < ball.getDistanceTo(getposition(oppClosest(ball)))))
+
+    else if(worldModel->getUNum() == GOALKEEPER && playerClosestToBall == GOALKEEPER)
     {
         return kickBall(KICK_IK,VecPosition(15,0,0));
     }
-    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 6 && worldModel->getUNum() == LEFT_DEF)
+    else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 6 && worldModel->getUNum() == LEFT_DEF)
     {
         return kickBall(KICK_IK,VecPosition(15,0,0));           
         // could optimise this by making it kick in line of the path it took to reach the ball
     }
-    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 4 && worldModel->getUNum() == RIGHT_DEF)
+    else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 4 && worldModel->getUNum() == RIGHT_DEF)
     {
         return kickBall(KICK_IK,VecPosition(15,0,0));
     }
@@ -749,7 +749,11 @@ SkillType NaoBehavior::moveToOff()
         {
             target = collisionAvoidance(true /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
         }
-        else target = ball;   
+        else 
+        {
+            target = ball;
+            target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+        }   
     }
 
     if (worldModel->getUNum() == GOALKEEPER)
@@ -776,7 +780,8 @@ SkillType NaoBehavior::moveToOff()
                 else
                 {
                     VecPosition target_dir = (VecPosition(15,0,0) - ball)*(1/modulus(VecPosition(15,0,0) - ball));
-                    target  = ball + ((target_dir).rotateAboutZ(15 + 5*worldModel->getUNum()));                    
+                    target  = ball + ((target_dir).rotateAboutZ(15 + 5*worldModel->getUNum()));
+                    target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);                    
                 }
             }
         else 
