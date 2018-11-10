@@ -227,11 +227,6 @@ VecPosition NaoBehavior::ballgoal()
     goal_ball.setY(pos_y + (vel_y*time_for_goal));
     goal_ball.setZ(0);
 
-    cout << "pos_x" << pos_x << "\n";
-    cout << "pos_y" << pos_y << "\n";
-    cout << "vel_x" << vel_x << "\n";
-    cout << "vel_y" << vel_y << "\n";
-    cout << "time: " << time_for_goal << "\n";
     cout << goal_ball << "\n";
     if(goal_ball.getY() > 1.3)
     {
@@ -242,6 +237,58 @@ VecPosition NaoBehavior::ballgoal()
         goal_ball.setY(1.3);
     }
     return goal_ball;
+}
+
+VecPosition NaoBehavior::APF(VecPosition target)
+{
+    double katt = 5;                                // placeholder value
+    double krep = 10;
+    double influence = 5;
+    
+    // VecPosition obstacle = VecPosition(0,0,0);
+    
+    VecPosition Fatt = VecPosition(0,0,0);
+    VecPosition Frep = VecPosition(0,0,0);
+    VecPosition Frep2 = VecPosition(0,0,0);
+
+
+    if(me.getDistanceTo(target) > katt)
+    {
+        Fatt = (worldModel->getMyPosition() - target)*(-1*katt);
+    }
+    else Fatt = (worldModel->getMyPosition() - target)*((1/modulus(worldModel->getMyPosition() - target))*(-8*katt/me.getDistanceTo(target)));
+    VecPosition Fnet = Fatt;
+    for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1 + NUM_AGENTS; ++jj)
+    {
+        VecPosition temp;
+        WorldObject* opponent = worldModel->getWorldObject( jj );
+        if (opponent->validPosition) 
+        {
+            temp = opponent->pos;
+        }
+        else 
+        {
+            continue;
+        } 
+        double distanceToplayer = me.getDistanceTo(temp);
+        if (distanceToplayer < influence) 
+        {
+            Frep2 = (worldModel->getMyPosition() - temp)*(krep/(me.getDistanceTo(temp)))*(1/distanceToplayer - 1/influence);
+            Frep.setX((worldModel->getMyPosition() - temp).getY()*(-1));
+            Frep.setY((worldModel->getMyPosition() - temp).getX());
+            if(Frep.getX() < 0)             // WORKS ONLY IF TARGET IS GOAL! (VERY SPECIFIC) TODO:IMPROVE
+            {       
+                Frep.setX(Frep.getX()*(-1));
+                Frep.setY(Frep.getY()*(-1));
+            }
+            Frep = Frep*(krep/me.getDistanceTo(temp));
+            Fnet += (Frep + Frep2);
+        }
+        else 
+            continue;
+    }    
+    VecPosition moveto = worldModel->getMyPosition() + Fnet;
+    return moveto;
 }
 
 SkillType NaoBehavior::selectSkill() 
@@ -486,11 +533,11 @@ SkillType NaoBehavior::attackplay()
             }
 
             //passing to wingers
-            else if(opponentcount(getposition(winger),2) < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && opponentcount(getposition(playerClosestToBall),2) > 1)
+            else if(opponentcount(getposition(winger_right),2) < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && opponentcount(getposition(playerClosestToBall),2) > 1)
 
             {
                 VecPosition winger_pos = VecPosition(9,1,0);
-                if(winger == RIGHT_FORWARD)
+                if(winger_right == RIGHT_FORWARD)
                     winger_pos.setY(-1);
 
 
@@ -557,6 +604,16 @@ SkillType NaoBehavior::defenseplay()
     {
         goToTarget(ballgoal());
     }
+    else if(worldModel->getUNum() == LEFT_DEF)
+    {
+        VecPosition temp_target = ballgoal();
+        temp_target.setX(-14);
+    }
+    else if(worldModel->getUNum() == RIGHT_DEF)
+    {
+        VecPosition temp_target = ballgoal();
+        temp_target.setX(-13.5);
+    }
     else return moveToOff();
 }
 
@@ -566,9 +623,9 @@ SkillType NaoBehavior::moveToOff()
 {
     int playerClosestToBall = ourClosest(ball);
     VecPosition target = VecPosition(0,0,0);
-    targpos[0] = VecPosition(-14.5,0,0);
-    targpos[1] = VecPosition(-14.5,0.85,0);
-    targpos[2] = VecPosition(-14.5,-0.85,0);
+    targpos[0] = VecPosition(-14.5,0,0);        //gk
+    targpos[1] = VecPosition(-14,0.85,0);       // left
+    targpos[2] = VecPosition(-13.5,-0.85,0);    // right
     
     if(worldModel->getUNum() == LEFT_C_DEF)
     {
@@ -580,10 +637,15 @@ SkillType NaoBehavior::moveToOff()
         }
         if(me.getDistanceTo(ball) > 2)
         {
-            target = collisionAvoidance(false /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+            target = collisionAvoidance(true /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
         }
-        else target = ball;
+        else 
+        {
+            target = ball;
+            target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+        }
     }
+    
     if(worldModel->getUNum() == RIGHT_C_DEF)
     {
         target = getposition(oppClosest(getposition(oppClosest(VecPosition(15,0,0)))));
@@ -593,10 +655,11 @@ SkillType NaoBehavior::moveToOff()
         }
         if(me.getDistanceTo(ball) > 2)
         {
-            target = collisionAvoidance(false /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
+            target = collisionAvoidance(true /*teammate*/, true/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
         }
         else target = ball;   
     }
+
     if (worldModel->getUNum() == GOALKEEPER)
     {   
         target = targpos[0];
@@ -614,7 +677,7 @@ SkillType NaoBehavior::moveToOff()
         target = ball;
         if(worldModel->getUNum() != playerClosestToBall)
             {
-                if(ball.getDistanceTo(oppClosest(ball)) < ball.getDistanceTo(ourClosest(ball)))
+                if(ball.getDistanceTo(getposition(oppClosest(ball))) < ball.getDistanceTo(getposition(ourClosest(ball))))
                 {
                     target = ball;
                 }
@@ -630,58 +693,6 @@ SkillType NaoBehavior::moveToOff()
         }
     }
     return goToTarget(target);
-}
-
-VecPosition NaoBehavior::APF(VecPosition target)
-{
-    double katt = 5;                                // placeholder value
-    double krep = 10;
-    double influence = 5;
-    
-    // VecPosition obstacle = VecPosition(0,0,0);
-    
-    VecPosition Fatt = VecPosition(0,0,0);
-    VecPosition Frep = VecPosition(0,0,0);
-    VecPosition Frep2 = VecPosition(0,0,0);
-
-
-    if(me.getDistanceTo(target) > katt)
-    {
-        Fatt = (worldModel->getMyPosition() - target)*(-1*katt);
-    }
-    else Fatt = (worldModel->getMyPosition() - target)*((1/modulus(worldModel->getMyPosition() - target))*(-8*katt/me.getDistanceTo(target)));
-    VecPosition Fnet = Fatt;
-    for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1 + NUM_AGENTS; ++jj)
-    {
-        VecPosition temp;
-        WorldObject* opponent = worldModel->getWorldObject( jj );
-        if (opponent->validPosition) 
-        {
-            temp = opponent->pos;
-        }
-        else 
-        {
-            continue;
-        } 
-        double distanceToplayer = me.getDistanceTo(temp);
-        if (distanceToplayer < influence) 
-        {
-            Frep2 = (worldModel->getMyPosition() - temp)*(krep/(me.getDistanceTo(temp)))*(1/distanceToplayer - 1/influence);
-            Frep.setX((worldModel->getMyPosition() - temp).getY()*(-1));
-            Frep.setY((worldModel->getMyPosition() - temp).getX());
-            if(Frep.getX() < 0)             // WORKS ONLY IF TARGET IS GOAL! (VERY SPECIFIC) TODO:IMPROVE
-            {       
-                Frep.setX(Frep.getX()*(-1));
-                Frep.setY(Frep.getY()*(-1));
-            }
-            Frep = Frep*(krep/me.getDistanceTo(temp));
-            Fnet += (Frep + Frep2);
-        }
-        else 
-            continue;
-    }    
-    VecPosition moveto = worldModel->getMyPosition() + Fnet;
-    return moveto;
 }
 
 /*

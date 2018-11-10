@@ -1,0 +1,11 @@
+LEFT_FORWARD            winger
+RIGHT_FORWARD           winger
+CENTRE_FORWARD          ball
+LEFT_MID                ball
+RIGHT_MID               ball
+CENTRE_MID              ball
+RIGHT_DEF               defender(static) -> change to dynamic
+RIGHT_C_DEF             marking
+LEFT_DEF                defender(static) -> change to dynamic
+LEFT_C_DEF              marking
+GOALKEEPER              defender(dynamic)
