@@ -334,7 +334,7 @@ SkillType NaoBehavior::selectSkill()
 
     // Walk to ball while always facing forward
     // return goToTargetRelative(worldModel->g2l(ball), -worldModel->getMyAngDeg());
-    // return testing();
+    return testing();
     
     static double startTime = worldModel->getTime();    
     if(((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)))
@@ -427,11 +427,7 @@ SkillType NaoBehavior::selectSkill()
 
 SkillType NaoBehavior::testing()
 { 
-    if(worldModel->getUNum() == GOALKEEPER)
-    {
-        return goToTarget(ballgoal());
-    }
-    else return SKILL_STAND;
+    return SKILL_STAND;
 }
 
 SkillType NaoBehavior::stay()
@@ -490,49 +486,47 @@ SkillType NaoBehavior::attackplay()
     }
     /**********************************************************/
 
-    /**********sends the farther of left/right forward as a 'winger'*************/
+    /**********sends left & right forwards as 'wingers'*************/
     static int winger_left = LEFT_FORWARD;
     static int winger_right = RIGHT_FORWARD;
     if(worldModel->getUNum() == winger_left)
         return goToTarget(VecPosition(9,1,0));
     else if(worldModel->getUNum() == winger_right)
         return goToTarget(VecPosition(9,-1,0));
-    /*******************************************************************************/
+    /***************************************************************/
 
     
     if(worldModel->getUNum() == playerClosestToBall)
     {
+        VecPosition shoot_goal = VecPosition(16,0,0);
+        shoot_goal.setY(offset);
+        shoot_goal.setZ(0);
+            
         // distance to goal less than 2 => use kick_ik to kick to goal
         if(ball.getDistanceTo(VecPosition(15,0,0)) < 2)
         {
-            return kickBall(KICK_IK,VecPosition(16,0,0));
+            return kickBall(KICK_IK,shoot_goal);
         }
         
         // distance to goal more than 2 less than 4 => use short kick to kick to goal
         else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 4)    
         {
-            VecPosition shoot_goal = VecPosition(16,0,0);
-            shoot_goal.setY(offset);
-            shoot_goal.setZ(0);
-            if(opponentcount(getposition(playerClosestToBall),2) < 1)
+            if(opponentcount(ball,2) == 0)
             {
                 return kickBall(KICK_FORWARD,shoot_goal);
             }
             else return kickBall(KICK_IK,shoot_goal);
         }
 
-        // distance to goal more than 3 but less than 7 => use long kick to kick to goal
+        // distance to goal more than 4 but less than 10 => use long kick to kick to goal
         else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 10)    
         {
-            VecPosition shoot_goal = VecPosition(16,0,0);
-            shoot_goal.setY(offset);
-            shoot_goal.setZ(0);
-            if(opponentcount(getposition(playerClosestToBall),1) == 0)
+            if(opponentcount(getposition(playerClosestToBall),1.5) == 0)
             {
                 return kickBall(KICK_LONG,shoot_goal);
             }
 
-            //passing to wingers
+            //passing to wingers && choosing which winger to pass
             else if(opponentcount(getposition(winger_right),2) < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && opponentcount(getposition(playerClosestToBall),2) > 1)
 
             {
@@ -568,7 +562,7 @@ SkillType NaoBehavior::defenseplay()
 { 
     int playerClosestToBall = ourClosest(ball);
     
-    if(worldModel->getUNum() == playerClosestToBall)
+    if(worldModel->getUNum() == playerClosestToBall && worldModel->getUNum() != GOALKEEPER)
     {
         if(opponentcount(ball,2) < 2)
         {
@@ -580,39 +574,34 @@ SkillType NaoBehavior::defenseplay()
         }
         else return kickBall(KICK_DRIBBLE, VecPosition(16,0,0));
     }
-    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 9 && worldModel->getUNum() == LEFT_DEF)
+    else if(worldModel->getUNum() == GOALKEEPER && playerClosestToBall == GOALKEEPER && ((me.getDistanceTo(ball) + 1) < ball.getDistanceTo(getposition(oppClosest(ball)))))
     {
         return kickBall(KICK_IK,VecPosition(15,0,0));
     }
-    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 7 && worldModel->getUNum() == RIGHT_DEF)
+    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 6 && worldModel->getUNum() == LEFT_DEF)
+    {
+        return kickBall(KICK_IK,VecPosition(15,0,0));           
+        // could optimise this by making it kick in line of the path it took to reach the ball
+    }
+    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 4 && worldModel->getUNum() == RIGHT_DEF)
     {
         return kickBall(KICK_IK,VecPosition(15,0,0));
     }
-    /*if(ball.getDistanceTo(VecPosition(-15,0,0)) < 5 && (worldModel->getUNum() == GOALKEEPER) && opponentcount(VecPosition(-15,0,0),2) < 2)
-    {
-        if(opponentcount(ball, 2) == 0)
-        {
-            return kickBall(KICK_LONG, VecPosition(15,0,0));
-        }
-        else if (opponentcount(ball, 1) > 0) 
-        {
-            return kickBall(KICK_IK,VecPosition(15,0,0));           // change this to a free space
-        }
-        else return kickBall(KICK_DRIBBLE,VecPosition(15,0,0));
-    }*/
     if(worldModel->getUNum() == GOALKEEPER)
     {
-        goToTarget(ballgoal());
+        return goToTarget(ballgoal());
     }
     else if(worldModel->getUNum() == LEFT_DEF)
     {
         VecPosition temp_target = ballgoal();
         temp_target.setX(-14);
+        return goToTarget(temp_target);
     }
     else if(worldModel->getUNum() == RIGHT_DEF)
     {
         VecPosition temp_target = ballgoal();
         temp_target.setX(-13.5);
+        return goToTarget(temp_target);
     }
     else return moveToOff();
 }

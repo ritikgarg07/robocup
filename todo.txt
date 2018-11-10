@@ -8,7 +8,7 @@
 8) get 2 kicks																Aryaman 	done
 9) kickoff setpiece, ie- kinda passing      								Aryaman 	done
 10) passing
-11) goalkick, player moves to target of goal 								Aryaman 	done
+11) goalkick, player moves to target of goal  // redundant now				Aryaman 	done
 12) better marking?
 13) make sure BOD players don't interfere with our own kick 				Ritik 		almost done(testing left)
 14) use/test kick_ik														Ritik		done
@@ -17,8 +17,10 @@
 17) improve posession function
 18) add target selection in defense players 								
 19) APF																		Ritik		done
-20) Change conditions in attackplay from no.of opp to closest opp distance 	Ritik		
+20) Change conditions in attackplay from no.of opp to closest opp distance 		
 21) Add gk behaviour(based on ball velocity)								Ritik		done
 22) remove players from BOD													4 players on BOD
 23) in places like goalkick, or defense: change kick pos from static to 
 	dynamic based on presence of opponent
+24) make temp static variable for opponentcount uses
+25) choosing what winger to pass to and when 
