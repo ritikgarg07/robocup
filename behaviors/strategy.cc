@@ -639,6 +639,7 @@ SkillType NaoBehavior::attackplay()
 
 SkillType NaoBehavior::defenseplay()
 { 
+
     int playerClosestToBall = ourClosest(ball);
     
     if(worldModel->getUNum() == playerClosestToBall && worldModel->getUNum() != GOALKEEPER)
@@ -707,6 +708,43 @@ SkillType NaoBehavior::defenseplay()
         }
         else return goToTarget(temp_target);
     }
+    /**********sends left & right forwards as 'wingers'*************/
+    static int winger_left = LEFT_FORWARD;
+    static int winger_right = RIGHT_FORWARD;
+    double distance, angle;
+    if(worldModel->getUNum() == winger_left)
+    {
+        if(me.getDistanceTo(VecPosition(9,1,0)) < 0.5)
+        {
+            getTargetDistanceAndAngle(VecPosition(15,0,0), distance, angle);
+            if (abs(angle) > 10) 
+            {
+                return goToTargetRelative(VecPosition(), angle);
+            } 
+            else 
+            {
+            return SKILL_STAND;
+            }
+        }
+        return goToTarget(VecPosition(9,1,0));
+    }
+    else if(worldModel->getUNum() == winger_right)
+    {
+        if(me.getDistanceTo(VecPosition(8,-1,0)) < 0.5)
+        {
+            getTargetDistanceAndAngle(VecPosition(15,0,0), distance, angle);
+            if (abs(angle) > 10) 
+            {
+                return goToTargetRelative(VecPosition(), angle);
+            } 
+            else 
+            {
+            return SKILL_STAND;
+            }
+        }
+        return goToTarget(VecPosition(8,-1,0));
+    }
+    /***************************************************************/
     else return moveToOff();
 }
 
