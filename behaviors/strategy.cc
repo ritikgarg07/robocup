@@ -310,7 +310,7 @@ SkillType NaoBehavior::selectSkill()
         }
         else if(worldModel->getUNum() == CENTRE_FORWARD)
         {
-            return goToTarget(VecPosition(-0.5,0,0));
+            return goToTarget(VecPosition(-2,0,0));
         }
         return SKILL_STAND;
     }
@@ -324,10 +324,18 @@ SkillType NaoBehavior::selectSkill()
         return kickin_opp();
     else if((worldModel->getPlayMode() == PM_GOAL_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_GOAL_KICK_RIGHT && worldModel->getSide() == SIDE_RIGHT))
     {
-        if (worldModel->getUNum() == GOALKEEPER)
+        if (worldModel->getUNum() == GOALKEEPER && me.getDistanceTo(VecPosition(-15,0,0)) < 2)
         {
             return kickBall(KICK_LONG, VecPosition(0,0,0));
         }
+        else if(worldModel->getUNum() == RIGHT_DEF && me.getDistanceTo(VecPosition(-15,0,0)) < 2)
+        {
+            return kickBall(KICK_LONG, VecPosition(0,0,0));
+        }
+        else if(worldModel->getUNum() == LEFT_DEF)
+        {
+            return kickBall(KICK_LONG, VecPosition(0,0,0));
+        }        
         else if(worldModel->getUNum() == CENTRE_MID)
         {
             return goToTarget(VecPosition(0,0,0));
@@ -381,6 +389,7 @@ SkillType NaoBehavior::stay()
     return SKILL_STAND;
 }
 
+
 SkillType NaoBehavior::kickoff(double time)
 {
 
@@ -396,6 +405,21 @@ SkillType NaoBehavior::kickoff(double time)
         return kickBall(KICK_LONG, VecPosition(15,-0.7,0));
     }
     return SKILL_STAND;
+}
+
+SkillType NaoBehavior::kickin()
+{
+    
+    if (worldModel->getUNum() == ourClosest(ball))
+    {
+        return kickBall(KICK_LONG, VecPosition(16,0,0)); //change vecposition to position of teammmate
+    }  
+    return moveToOff();    
+}
+
+SkillType NaoBehavior::kickin_opp()
+{
+    return moveToOff();
 }
 
 SkillType NaoBehavior::attackplay()
@@ -495,20 +519,6 @@ SkillType NaoBehavior::attackplay()
     }
 }
 
-SkillType NaoBehavior::kickin()
-{
-    
-    if (worldModel->getUNum() == ourClosest(ball))
-    {
-        return kickBall(KICK_FORWARD, VecPosition(16,0,0)); //change vecposition to position of teammmate
-    }  
-    return moveToOff();    
-}
-
-SkillType NaoBehavior::kickin_opp()
-{
-    return moveToOff();
-}
 
 SkillType NaoBehavior::defenseplay()
 { 

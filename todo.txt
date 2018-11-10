@@ -20,3 +20,5 @@
 20) Change conditions in attackplay from no.of opp to closest opp distance 	Ritik		
 21) Add gk behaviour(based on ball velocity)								Ritik		done
 22) remove players from BOD
+23) in places like goalkick, or defense: change kick pos from set to 
+	dynamic based on presence of opponent
