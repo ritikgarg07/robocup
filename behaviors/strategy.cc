@@ -182,7 +182,7 @@ int NaoBehavior::opponentcount(VecPosition a, double distance)
     }    
     return opponent_counter;    
 }
-bool NaoBehavior::posession()    // player closest distanceis 0.4 , closest opponent is 0.8 and closest player is not fallen
+bool NaoBehavior::posession()    // player closest distance is 0.4 , closest opponent is 0.8 and closest player is not fallen
 {
     int playerClosestToBall = ourClosest(ball);
     double closestDistance = ball.getDistanceTo(getposition(playerClosestToBall));
@@ -334,7 +334,7 @@ SkillType NaoBehavior::selectSkill()
 
     // Walk to ball while always facing forward
     // return goToTargetRelative(worldModel->g2l(ball), -worldModel->getMyAngDeg());
-    return testing();
+    // return testing();
     
     static double startTime = worldModel->getTime();    
     if(((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)))
@@ -527,24 +527,26 @@ SkillType NaoBehavior::attackplay()
             }
 
             //passing to wingers && choosing which winger to pass
-            else if(opponentcount(getposition(winger_right),2) < 2 && (ball.getDistanceTo(VecPosition(15,0,0)) > 7) && opponentcount(getposition(playerClosestToBall),2) > 1)
-
-            {
-                VecPosition winger_pos = VecPosition(9,1,0);
-                if(winger_right == RIGHT_FORWARD)
-                    winger_pos.setY(-1);
-
-
-                if (me.getDistanceTo(VecPosition(9,0,0)) < 2)
-                {
-                    return kickBall(KICK_IK,winger_pos);
-                }
-                else if (me.getDistanceTo(VecPosition(9,0,0)) < 5)
-                {
-                    return kickBall(KICK_FORWARD,winger_pos);
-                }
-                else return kickBall(KICK_LONG,winger_pos);
-            }    
+            else if(opponentcount(getposition(winger_right),2) == 0)
+            {   
+                if(me.getDistanceTo(getposition(winger_right)) < 3)
+                    return kickBall(KICK_IK,getposition(winger_right));
+                else if(opponentcount(worldModel->getMyPosition(),2) == 0 && me.getDistanceTo(getposition(winger_right)) < 5)
+                    return kickBall(KICK_FORWARD,getposition(winger_right));
+                else if(opponentcount(worldModel->getMyPosition(),2) == 0 && me.getDistanceTo(getposition(winger_right)) < 15)
+                    return kickBall(KICK_LONG,getposition(winger_right));
+                else return kickBall(KICK_DRIBBLE,APF(shoot_goal));
+            }
+            else if(opponentcount(getposition(winger_left),2) == 0)
+            {   
+                if(me.getDistanceTo(getposition(winger_left)) < 3)
+                    return kickBall(KICK_IK,getposition(winger_left));
+                else if(opponentcount(worldModel->getMyPosition(),2) == 0 && me.getDistanceTo(getposition(winger_left)) < 5)
+                    return kickBall(KICK_FORWARD,getposition(winger_left));
+                else if(opponentcount(worldModel->getMyPosition(),2) == 0 && me.getDistanceTo(getposition(winger_left)) < 15)
+                    return kickBall(KICK_LONG,getposition(winger_left));
+                else return kickBall(KICK_DRIBBLE,APF(shoot_goal));
+            }
             else return kickBall(KICK_DRIBBLE,APF(shoot_goal));
         }
 
