@@ -511,7 +511,12 @@ SkillType NaoBehavior::attackplay()
         // distance to goal more than 2 less than 4 => use short kick to kick to goal
         else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 4)    
         {
-            if(opponentcount(ball,2) == 0)
+            static int temp_opp_c = opponentcount(ball,2);
+            if(worldModel->getLastSkill() != KICK_FORWARD)
+            {
+                temp_opp_c = opponentcount(ball,2);
+            }
+            if(temp_opp_c == 0)
             {
                 return kickBall(KICK_FORWARD,shoot_goal);
             }
@@ -521,29 +526,54 @@ SkillType NaoBehavior::attackplay()
         // distance to goal more than 4 but less than 10 => use long kick to kick to goal
         else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 10)    
         {
-            if(opponentcount(getposition(playerClosestToBall),1.5) == 0)
+            static int temp_opp_c = opponentcount(getposition(playerClosestToBall),1.5);
+            if(worldModel->getLastSkill() != KICK_LONG)
+            {
+                temp_opp_c = opponentcount(getposition(playerClosestToBall),1.5);
+            }
+            static int temp_opp_r = opponentcount(getposition(winger_right),2);
+            if(worldModel->getLastSkill() != worldModel->getPreviousLastSkill())
+            {
+                temp_opp_r = opponentcount(getposition(winger_right),2);
+            }
+
+            static int temp_opp_l = opponentcount(getposition(winger_left),2);
+            if(worldModel->getLastSkill() != worldModel->getPreviousLastSkill())
+            {
+                temp_opp_l = opponentcount(getposition(winger_left),2);
+            }
+            
+            static int temp_opp_me = opponentcount(worldModel->getMyPosition(),2);
+            if(worldModel->getLastSkill() != worldModel->getPreviousLastSkill())
+            {
+                temp_opp_me = opponentcount(worldModel->getMyPosition(),2);
+            }
+
+            
+            if(temp_opp_c == 0)
             {
                 return kickBall(KICK_LONG,shoot_goal);
             }
 
             //passing to wingers && choosing which winger to pass
-            else if(opponentcount(getposition(winger_right),2) == 0)
+
+            else if(temp_opp_r == 0)
             {   
                 if(me.getDistanceTo(getposition(winger_right)) < 3)
                     return kickBall(KICK_IK,getposition(winger_right));
-                else if(opponentcount(worldModel->getMyPosition(),2) == 0 && me.getDistanceTo(getposition(winger_right)) < 5)
+                else if(temp_opp_me == 0 && me.getDistanceTo(getposition(winger_right)) < 5)
                     return kickBall(KICK_FORWARD,getposition(winger_right));
-                else if(opponentcount(worldModel->getMyPosition(),2) == 0 && me.getDistanceTo(getposition(winger_right)) < 15)
+                else if(temp_opp_me == 0 && me.getDistanceTo(getposition(winger_right)) < 15)
                     return kickBall(KICK_LONG,getposition(winger_right));
                 else return kickBall(KICK_DRIBBLE,APF(shoot_goal));
             }
-            else if(opponentcount(getposition(winger_left),2) == 0)
+            else if(temp_opp_l== 0)
             {   
                 if(me.getDistanceTo(getposition(winger_left)) < 3)
                     return kickBall(KICK_IK,getposition(winger_left));
-                else if(opponentcount(worldModel->getMyPosition(),2) == 0 && me.getDistanceTo(getposition(winger_left)) < 5)
+                else if(temp_opp_me == 0 && me.getDistanceTo(getposition(winger_left)) < 5)
                     return kickBall(KICK_FORWARD,getposition(winger_left));
-                else if(opponentcount(worldModel->getMyPosition(),2) == 0 && me.getDistanceTo(getposition(winger_left)) < 15)
+                else if(temp_opp_me == 0 && me.getDistanceTo(getposition(winger_left)) < 15)
                     return kickBall(KICK_LONG,getposition(winger_left));
                 else return kickBall(KICK_DRIBBLE,APF(shoot_goal));
             }
@@ -553,6 +583,7 @@ SkillType NaoBehavior::attackplay()
         // dribble to goal     
         else return kickBall(KICK_DRIBBLE, APF(VecPosition(16,0,0))); 
     }
+
     else 
     { 
         return moveToOff();    
@@ -566,14 +597,27 @@ SkillType NaoBehavior::defenseplay()
     
     if(worldModel->getUNum() == playerClosestToBall && worldModel->getUNum() != GOALKEEPER)
     {
-        if(opponentcount(ball,2) < 2)
+        static int temp_opp_c = opponentcount(ball,2);
+        if(worldModel->getLastSkill() != KICK_LONG)
+        {
+            temp_opp_c = opponentcount(ball,2);
+        }
+        
+        if(temp_opp_c < 2)
         {
             return kickBall(KICK_LONG, VecPosition(15,0,0));
         }
-        else if(opponentcount(ball,1) > 0)
+
+        static int temp_opp_b = opponentcount(ball,1);
+        if(worldModel->getLastSkill() != KICK_IK)
+        {
+            temp_opp_b = opponentcount(ball,1);
+        }
+        else if(temp_opp_b > 0)
         {
             return kickBall(KICK_IK,VecPosition(16,0,0));
         }
+
         else return kickBall(KICK_DRIBBLE, VecPosition(16,0,0));
     }
     else if(worldModel->getUNum() == GOALKEEPER && playerClosestToBall == GOALKEEPER && ((me.getDistanceTo(ball) + 1) < ball.getDistanceTo(getposition(oppClosest(ball)))))

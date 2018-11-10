@@ -24,3 +24,4 @@
 	dynamic based on presence of opponent
 24) make temp static variable for opponentcount uses
 25) choosing what winger to pass to and when 								Ritik 		temp done
+26) make sure KICK_LONG etc are SKILLS (check implementation of #23)
