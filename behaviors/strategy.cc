@@ -342,10 +342,11 @@ SkillType NaoBehavior::selectSkill()
         }
         else if(worldModel->getUNum() != RIGHT_DEF || worldModel->getUNum() != LEFT_DEF)
         {
-            return stay();               // needs to be changed so that players don't move to the ball and kick it
+            return stay();               // needs to so that players don't move to the ball and kick it
         }
         else return moveToOff();
     }
+    
     else if((worldModel->getPlayMode() == PM_CORNER_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_CORNER_KICK_RIGHT && worldModel->getSide() == SIDE_RIGHT))
     {
         if (worldModel->getUNum() == LEFT_FORWARD)
@@ -356,10 +357,12 @@ SkillType NaoBehavior::selectSkill()
             return goToTarget(VecPosition(13,0,0));
         else return moveToOff();
     }
+
     else if((worldModel->getPlayMode() == PM_CORNER_KICK_LEFT && worldModel->getSide() == SIDE_RIGHT) || (worldModel->getPlayMode() == PM_CORNER_KICK_RIGHT && worldModel->getSide() == SIDE_LEFT))
     {
         return defenseplay();
     }
+    
     else if((worldModel->getPlayMode() == PM_FREE_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_FREE_KICK_RIGHT &&worldModel->getSide() == SIDE_RIGHT))
     {
         return attackplay();
@@ -432,27 +435,21 @@ SkillType NaoBehavior::attackplay()
     double offset = 0;
     if(getposition(opponentClosestToGoal).getY() > 0)
     {
-        offset = -1;
+        offset = -0.7;
     }
     else
     {
-        offset = 1;
+        offset = 0.7;
     }
     /**********************************************************/
 
     /**********sends the farther of left/right forward as a 'winger'*************/
-    static int winger = -1;
-    if(ball.getDistanceTo(getposition(RIGHT_FORWARD)) < ball.getDistanceTo(getposition(LEFT_FORWARD)))
-    {
-        int winger = LEFT_FORWARD;
-    }
-    else winger = RIGHT_FORWARD;
-    if(worldModel->getUNum() == winger && playerClosestToBall != winger)
-    {
-        if(winger == RIGHT_FORWARD)
-            return goToTarget(VecPosition(9,-1,0));               //change vecposition
-        else return goToTarget(VecPosition(9,1,0));
-    }
+    static int winger_left = LEFT_FORWARD;
+    static int winger_right = RIGHT_FORWARD;
+    if(worldModel->getUNum() == winger_left)
+        return goToTarget(VecPosition(9,1,0));
+    else if(worldModel->getUNum() == winger_right)
+        return goToTarget(VecPosition(9,-1,0));
     /*******************************************************************************/
 
     
