@@ -509,43 +509,6 @@ SkillType NaoBehavior::attackplay()
     }
     /**********************************************************/
 
-    /**********sends left & right forwards as 'wingers'*************/
-    static int winger_left = LEFT_FORWARD;
-    static int winger_right = RIGHT_FORWARD;
-    double distance, angle;
-    if(worldModel->getUNum() == winger_left)
-    {
-        if(me.getDistanceTo(VecPosition(9,1,0)) < 0.5)
-        {
-            getTargetDistanceAndAngle(VecPosition(15,0,0), distance, angle);
-            if (abs(angle) > 10) 
-            {
-                return goToTargetRelative(VecPosition(), angle);
-            } 
-            else 
-            {
-            return SKILL_STAND;
-            }
-        }
-        return goToTarget(VecPosition(9,1,0));
-    }
-    else if(worldModel->getUNum() == winger_right)
-    {
-        if(me.getDistanceTo(VecPosition(8,-1,0)) < 0.5)
-        {
-            getTargetDistanceAndAngle(VecPosition(15,0,0), distance, angle);
-            if (abs(angle) > 10) 
-            {
-                return goToTargetRelative(VecPosition(), angle);
-            } 
-            else 
-            {
-            return SKILL_STAND;
-            }
-        }
-        return goToTarget(VecPosition(8,-1,0));
-    }
-    /***************************************************************/
 
     
     if(worldModel->getUNum() == playerClosestToBall)
@@ -583,16 +546,16 @@ SkillType NaoBehavior::attackplay()
             {
                 temp_opp_c = opponentcount(ball,1.5);
             }
-            static int temp_opp_r = opponentcount(getposition(winger_right),1.5);
+            static int temp_opp_r = opponentcount(getposition(RIGHT_FORWARD),1.5);
             if(worldModel->getLastSkill() != worldModel->getPreviousLastSkill())
             {
-                temp_opp_r = opponentcount(getposition(winger_right),1.5);
+                temp_opp_r = opponentcount(getposition(RIGHT_FORWARD),1.5);
             }
 
-            static int temp_opp_l = opponentcount(getposition(winger_left),1.5);
+            static int temp_opp_l = opponentcount(getposition(LEFT_FORWARD),1.5);
             if(worldModel->getLastSkill() != worldModel->getPreviousLastSkill())
             {
-                temp_opp_l = opponentcount(getposition(winger_left),1.5);
+                temp_opp_l = opponentcount(getposition(LEFT_FORWARD),1.5);
             }
             
             static int temp_opp_me = opponentcount(worldModel->getMyPosition(),2);
@@ -611,22 +574,22 @@ SkillType NaoBehavior::attackplay()
 
             else if(temp_opp_r == 0 && worldModel->getUNum() != RIGHT_FORWARD && worldModel->getUNum() != LEFT_FORWARD)
             {   
-                if(me.getDistanceTo(getposition(winger_right)) < 5)
-                    return kickBall(KICK_IK,getposition(winger_right));
-                else if(temp_opp_me == 0 && me.getDistanceTo(getposition(winger_right)) < 5)
-                    return kickBall(KICK_FORWARD,getposition(winger_right));
-                else if(temp_opp_me == 0 && me.getDistanceTo(getposition(winger_right)) < 15)
-                    return kickBall(KICK_LONG,getposition(winger_right));
+                if(me.getDistanceTo(getposition(RIGHT_FORWARD)) < 5)
+                    return kickBall(KICK_IK,getposition(RIGHT_FORWARD)+ VecPosition(1,0,0));
+                else if(temp_opp_me == 0 && me.getDistanceTo(getposition(RIGHT_FORWARD)) < 5)
+                    return kickBall(KICK_FORWARD,getposition(RIGHT_FORWARD)+ VecPosition(1,0,0));
+                else if(temp_opp_me == 0 && me.getDistanceTo(getposition(RIGHT_FORWARD)) < 15)
+                    return kickBall(KICK_LONG,getposition(RIGHT_FORWARD)+ VecPosition(1,0,0));
                 else return kickBall(KICK_DRIBBLE,APF(shoot_goal));
             }
             else if(temp_opp_l== 0 && worldModel->getUNum() != RIGHT_FORWARD && worldModel->getUNum() != LEFT_FORWARD)
             {   
-                if(me.getDistanceTo(getposition(winger_left)) < 5)
-                    return kickBall(KICK_IK,getposition(winger_left));
-                else if(temp_opp_me == 0 && me.getDistanceTo(getposition(winger_left)) < 5)
-                    return kickBall(KICK_FORWARD,getposition(winger_left));
-                else if(temp_opp_me == 0 && me.getDistanceTo(getposition(winger_left)) < 15)
-                    return kickBall(KICK_LONG,getposition(winger_left));
+                if(me.getDistanceTo(getposition(LEFT_FORWARD)) < 5)
+                    return kickBall(KICK_IK,getposition(LEFT_FORWARD+ VecPosition(1,0,0)));
+                else if(temp_opp_me == 0 && me.getDistanceTo(getposition(LEFT_FORWARD)) < 5)
+                    return kickBall(KICK_FORWARD,getposition(LEFT_FORWARD) + VecPosition(1,0,0));
+                else if(temp_opp_me == 0 && me.getDistanceTo(getposition(LEFT_FORWARD)) < 15)
+                    return kickBall(KICK_LONG,getposition(LEFT_FORWARD + VecPosition(1,0,0)));
                 else return kickBall(KICK_DRIBBLE,APF(shoot_goal));
             }
             else return kickBall(KICK_DRIBBLE,APF(shoot_goal));
@@ -635,6 +598,43 @@ SkillType NaoBehavior::attackplay()
         // dribble to goal     
         else return kickBall(KICK_DRIBBLE, APF(shoot_goal)); 
     }
+    /**********sends left & right forwards as 'wingers'*************/
+    static int winger_left = LEFT_FORWARD;
+    static int winger_right = RIGHT_FORWARD;
+    double distance, angle;
+    if(worldModel->getUNum() == winger_left)
+    {
+        if(me.getDistanceTo(VecPosition(9,1,0)) < 0.5)
+        {
+            getTargetDistanceAndAngle(VecPosition(15,0,0), distance, angle);
+            if (abs(angle) > 10) 
+            {
+                return goToTargetRelative(VecPosition(), angle);
+            } 
+            else 
+            {
+            return SKILL_STAND;
+            }
+        }
+        return goToTarget(VecPosition(9,1,0));
+    }
+    else if(worldModel->getUNum() == winger_right)
+    {
+        if(me.getDistanceTo(VecPosition(8,-1,0)) < 0.5)
+        {
+            getTargetDistanceAndAngle(VecPosition(15,0,0), distance, angle);
+            if (abs(angle) > 10) 
+            {
+                return goToTargetRelative(VecPosition(), angle);
+            } 
+            else 
+            {
+            return SKILL_STAND;
+            }
+        }
+        return goToTarget(VecPosition(8,-1,0));
+    }
+    /***************************************************************/
 
     else 
     { 
