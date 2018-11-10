@@ -287,7 +287,7 @@ SkillType NaoBehavior::selectSkill()
 
     // Walk to ball while always facing forward
     // return goToTargetRelative(worldModel->g2l(ball), -worldModel->getMyAngDeg());
-    return testing();
+    // return testing();
     
     static double startTime = worldModel->getTime();    
     if(((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)))
@@ -300,9 +300,20 @@ SkillType NaoBehavior::selectSkill()
     }
     else if ((worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_RIGHT))
     {
-        return moveToOff();
+        if(worldModel->getUNum() == LEFT_FORWARD && ball.getY() > 1)
+        {
+            return goToTarget(VecPosition(-0.5,ball.getY(),0));
+        }
+        else if(worldModel->getUNum() == RIGHT_FORWARD && ball.getY() < -1)
+        {
+            return goToTarget(VecPosition(-0.5,ball.getY(),0));
+        }
+        else if(worldModel->getUNum() == CENTRE_FORWARD)
+        {
+            return goToTarget(VecPosition(-0.5,0,0));
+        }
+        return SKILL_STAND;
     }
-    
     else if((worldModel->getPlayMode() == PM_KICK_IN_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_IN_RIGHT && worldModel->getSide() == SIDE_RIGHT))
     {
 
