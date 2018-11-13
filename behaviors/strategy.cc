@@ -101,7 +101,7 @@ int NaoBehavior::ourClosest(VecPosition a)
         else 
         {
             WorldObject* teammate = worldModel->getWorldObject( jj );
-            if (teammate->validPosition && worldModel->getFallenTeammate(playerNum) != true)  
+            if (teammate->validPosition && worldModel->getFallenTeammate(jj) == 0)  
             {
                 temp = teammate->pos;
             } 
@@ -190,7 +190,7 @@ bool NaoBehavior::posession()    // player closest distance is 0.4 , closest opp
     int opponent = oppClosest(ball);
     double closestDistanceOpp = ball.getDistanceTo(getposition(opponent));
 
-    if(closestDistance <= 0.6 && closestDistanceOpp >= 1)
+    if(closestDistance <= 0.5 && closestDistanceOpp >= 1)
     {
         return true;
     }
@@ -353,10 +353,11 @@ SkillType NaoBehavior::selectSkill()
     {
             return kickoff(worldModel->getTime() - startTime);
     }
-    else if ((worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_RIGHT))
+    if ((worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_RIGHT))
     {
         if(worldModel->getUNum() == LEFT_FORWARD && ball.getY() > 1)
         {
+            cout << ball.getY() << " ";
             return goToTarget(VecPosition(-0.5,ball.getY(),0));
         }
         else if(worldModel->getUNum() == RIGHT_FORWARD && ball.getY() < -1)
@@ -365,19 +366,19 @@ SkillType NaoBehavior::selectSkill()
         }
         else if(worldModel->getUNum() == CENTRE_FORWARD)
         {
-            return goToTarget(VecPosition(-2,0,0));
+            return goToTarget(VecPosition(-3,0,0));
         }
-        return SKILL_STAND;
+        else return SKILL_STAND;
     }
-    else if((worldModel->getPlayMode() == PM_KICK_IN_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_IN_RIGHT && worldModel->getSide() == SIDE_RIGHT))
+    if((worldModel->getPlayMode() == PM_KICK_IN_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_IN_RIGHT && worldModel->getSide() == SIDE_RIGHT))
     {
 
         return kickin();
     }
 
-    else if((worldModel->getPlayMode() == PM_KICK_IN_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_IN_LEFT && worldModel->getSide() == SIDE_RIGHT))
+    if((worldModel->getPlayMode() == PM_KICK_IN_RIGHT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_IN_LEFT && worldModel->getSide() == SIDE_RIGHT))
         return kickin_opp();
-    else if((worldModel->getPlayMode() == PM_GOAL_KICK_LEFT && worldModel->getSide() == SIDE_RIGHT) || (worldModel->getPlayMode() == PM_GOAL_KICK_RIGHT && worldModel->getSide() == SIDE_LEFT))
+    if((worldModel->getPlayMode() == PM_GOAL_KICK_LEFT && worldModel->getSide() == SIDE_RIGHT) || (worldModel->getPlayMode() == PM_GOAL_KICK_RIGHT && worldModel->getSide() == SIDE_LEFT))
     {
         if(worldModel->getUNum() == CENTRE_MID)
         {
@@ -389,7 +390,7 @@ SkillType NaoBehavior::selectSkill()
         }
         else return SKILL_STAND;
     }
-    else if((worldModel->getPlayMode() == PM_GOAL_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_GOAL_KICK_RIGHT && worldModel->getSide() == SIDE_RIGHT))
+    if((worldModel->getPlayMode() == PM_GOAL_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_GOAL_KICK_RIGHT && worldModel->getSide() == SIDE_RIGHT))
     {
         if (worldModel->getUNum() == GOALKEEPER && me.getDistanceTo(VecPosition(-15,0,0)) < 3)
         {
@@ -420,7 +421,7 @@ SkillType NaoBehavior::selectSkill()
         else return moveToOff();
     }
     
-    else if((worldModel->getPlayMode() == PM_CORNER_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_CORNER_KICK_RIGHT && worldModel->getSide() == SIDE_RIGHT))
+    if((worldModel->getPlayMode() == PM_CORNER_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_CORNER_KICK_RIGHT && worldModel->getSide() == SIDE_RIGHT))
     {
         if (worldModel->getUNum() == LEFT_FORWARD)
         {
@@ -431,20 +432,20 @@ SkillType NaoBehavior::selectSkill()
         else return moveToOff();
     }
 
-    else if((worldModel->getPlayMode() == PM_CORNER_KICK_LEFT && worldModel->getSide() == SIDE_RIGHT) || (worldModel->getPlayMode() == PM_CORNER_KICK_RIGHT && worldModel->getSide() == SIDE_LEFT))
+    if((worldModel->getPlayMode() == PM_CORNER_KICK_LEFT && worldModel->getSide() == SIDE_RIGHT) || (worldModel->getPlayMode() == PM_CORNER_KICK_RIGHT && worldModel->getSide() == SIDE_LEFT))
     {
         return defenseplay();
     }
     
-    else if((worldModel->getPlayMode() == PM_FREE_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_FREE_KICK_RIGHT &&worldModel->getSide() == SIDE_RIGHT))
+    if((worldModel->getPlayMode() == PM_FREE_KICK_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_FREE_KICK_RIGHT &&worldModel->getSide() == SIDE_RIGHT))
     {
         return attackplay();
     }
-    else if((worldModel->getPlayMode() == PM_FREE_KICK_LEFT && worldModel->getSide() == SIDE_RIGHT) || (worldModel->getPlayMode() == PM_FREE_KICK_RIGHT && worldModel->getSide() == SIDE_LEFT))
+    if((worldModel->getPlayMode() == PM_FREE_KICK_LEFT && worldModel->getSide() == SIDE_RIGHT) || (worldModel->getPlayMode() == PM_FREE_KICK_RIGHT && worldModel->getSide() == SIDE_LEFT))
     {
         return defenseplay();
     }
-    else if(ball.getDistanceTo(VecPosition(-15,0,0)) < 15)   // change 5
+    if(ball.getDistanceTo(VecPosition(-15,0,0)) < 15)   // change 5
     {
         return defenseplay();
     }
@@ -464,7 +465,6 @@ SkillType NaoBehavior::stay()
 
 SkillType NaoBehavior::kickoff(double time)
 {
-
     if(worldModel->getUNum() == CENTRE_FORWARD)
     {
         //kick to left forward or right ehhhh
@@ -496,7 +496,6 @@ SkillType NaoBehavior::kickin_opp()
 
 SkillType NaoBehavior::attackplay()
 {
-
     int playerClosestToBall = ourClosest(ball);
     
     /******calculates 'offset' based on gk position************/
@@ -937,6 +936,15 @@ SkillType NaoBehavior::demoKickingCircle()
             return goToTarget(target);
         }
     }
+}
+
+
+
+
+
+VecPosition NaoBehavior::location()
+{
+    VecPosition centre = ball;
 }
 
 

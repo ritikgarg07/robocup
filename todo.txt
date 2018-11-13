@@ -19,16 +19,17 @@
 23) in places like goalkick, or defense: change kick pos from static to 
 	dynamic based on presence of opponent 									Ritik 		done
 24) make temp static variable for opponentcount uses						Ritik		done
-
-
-
-
+28) APF testing																Ritik		done
 13) make sure BOD players don't interfere with our own kick 				Ritik 		almost done(testing left)
+26) make sure KICK_LONG etc are SKILLS (check implementation of #23)		Ritik		done	
+27) don't consider fallen players as closest								Ritik		done			
 
 
-26) make sure KICK_LONG etc are SKILLS (check implementation of #23)	
-27) don't consider fallen players as cloest			
-28) APF TESTING
 10) passing
-
 18) add target selection in defense players 	PRIORITY								
+
+
+
+
+
+
