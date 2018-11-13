@@ -190,8 +190,8 @@ bool NaoBehavior::posession()    // player closest distance is 0.4 , closest opp
     int opponent = oppClosest(ball);
     double closestDistanceOpp = ball.getDistanceTo(getposition(opponent));
 
-    if(closestDistance <= 0.6 && closestDistanceOpp >= 1 && !(worldModel->getFallenTeammate(playerClosestToBall)))
-       {
+    if(closestDistance <= 0.6 && closestDistanceOpp >= 1)
+    {
         return true;
     }
     else return false;
@@ -276,7 +276,10 @@ VecPosition NaoBehavior::APF(VecPosition target)
         double distanceToplayer = me.getDistanceTo(temp);
         if (distanceToplayer < influence) 
         {
-            Frep2 = (worldModel->getMyPosition() - temp)*(krep/(me.getDistanceTo(temp)))*(1/distanceToplayer - 1/influence);
+            // repulsive force
+            Frep2 = (worldModel->getMyPosition() - temp)*((krep/2)/(me.getDistanceTo(temp)))*(1/distanceToplayer - 1/influence);
+            
+            // Frep => circular force
             Frep.setX((worldModel->getMyPosition() - temp).getY()*(-1));
             Frep.setY((worldModel->getMyPosition() - temp).getX());
             if(Frep.getX() < 0)             // WORKS ONLY IF TARGET IS GOAL! (VERY SPECIFIC) TODO:IMPROVE
@@ -538,7 +541,7 @@ SkillType NaoBehavior::attackplay()
             else return kickBall(KICK_IK,shoot_goal);
         }
 
-        // distance to goal more than 4 but less than 15 => use long kick to kick to goal
+        // distance to goal more than 4 but less than 13 => use long kick to kick to goal
         else if ((ball.getDistanceTo(VecPosition(15,0,0))) < 13)    
         {
             static int temp_opp_c = opponentcount(ball,1.5);
@@ -563,8 +566,6 @@ SkillType NaoBehavior::attackplay()
             {
                 temp_opp_me = opponentcount(worldModel->getMyPosition(),2);
             }
-            cout << "players around right: " << temp_opp_r << " players around left: " << temp_opp_l << "\n";
-
             if(temp_opp_c == 0)
             {
                 return kickBall(KICK_LONG,shoot_goal);
@@ -572,32 +573,41 @@ SkillType NaoBehavior::attackplay()
 
             //passing to wingers && choosing which winger to pass
 
-            else if(temp_opp_r == 0 && worldModel->getUNum() != RIGHT_FORWARD && worldModel->getUNum() != LEFT_FORWARD)
+            if(temp_opp_r == 0 && worldModel->getUNum() != RIGHT_FORWARD && worldModel->getUNum() != LEFT_FORWARD)
             {   
                 if(me.getDistanceTo(getposition(RIGHT_FORWARD)) < 5)
-                    return kickBall(KICK_IK,getposition(RIGHT_FORWARD)+ VecPosition(1,0,0));
+                    return kickBall(KICK_IK,getposition(RIGHT_FORWARD) + VecPosition(0.5,0.5,0));
                 else if(temp_opp_me == 0 && me.getDistanceTo(getposition(RIGHT_FORWARD)) < 5)
-                    return kickBall(KICK_FORWARD,getposition(RIGHT_FORWARD)+ VecPosition(1,0,0));
+                    return kickBall(KICK_FORWARD,getposition(RIGHT_FORWARD)+ VecPosition(0.5,0.5,0));
                 else if(temp_opp_me == 0 && me.getDistanceTo(getposition(RIGHT_FORWARD)) < 15)
-                    return kickBall(KICK_LONG,getposition(RIGHT_FORWARD)+ VecPosition(1,0,0));
+                    return kickBall(KICK_LONG,getposition(RIGHT_FORWARD)+ VecPosition(0.5,0.5,0));
                 else return kickBall(KICK_DRIBBLE,APF(shoot_goal));
             }
-            else if(temp_opp_l== 0 && worldModel->getUNum() != RIGHT_FORWARD && worldModel->getUNum() != LEFT_FORWARD)
+            if(temp_opp_l== 0 && worldModel->getUNum() != RIGHT_FORWARD && worldModel->getUNum() != LEFT_FORWARD)
             {   
                 if(me.getDistanceTo(getposition(LEFT_FORWARD)) < 5)
-                    return kickBall(KICK_IK,getposition(LEFT_FORWARD+ VecPosition(1,0,0)));
+                    return kickBall(KICK_IK,getposition(LEFT_FORWARD) + VecPosition(0.5,0.5,0));
                 else if(temp_opp_me == 0 && me.getDistanceTo(getposition(LEFT_FORWARD)) < 5)
-                    return kickBall(KICK_FORWARD,getposition(LEFT_FORWARD) + VecPosition(1,0,0));
+                    return kickBall(KICK_FORWARD,getposition(LEFT_FORWARD) + VecPosition(0.5,0.5,0));
                 else if(temp_opp_me == 0 && me.getDistanceTo(getposition(LEFT_FORWARD)) < 15)
-                    return kickBall(KICK_LONG,getposition(LEFT_FORWARD + VecPosition(1,0,0)));
+                    return kickBall(KICK_LONG,getposition(LEFT_FORWARD) + VecPosition(0.5,0.5,0));
                 else return kickBall(KICK_DRIBBLE,APF(shoot_goal));
+            }
+            if(posession() == false)
+            {
+                return kickBall(KICK_DRIBBLE,shoot_goal);
             }
             else return kickBall(KICK_DRIBBLE,APF(shoot_goal));
         }
 
-        // dribble to goal     
+        // dribble to goal
+        if(posession() == false)
+        {
+            return kickBall(KICK_DRIBBLE,shoot_goal);
+        }     
         else return kickBall(KICK_DRIBBLE, APF(shoot_goal)); 
     }
+    
     /**********sends left & right forwards as 'wingers'*************/
     static int winger_left = LEFT_FORWARD;
     static int winger_right = RIGHT_FORWARD;
@@ -667,11 +677,15 @@ SkillType NaoBehavior::defenseplay()
             return kickBall(KICK_LONG, VecPosition(15,0,0));
         }
 
-        else if(temp_opp_b > 0)
+        if(temp_opp_b > 0)
         {
             return kickBall(KICK_IK,VecPosition(16,0,0));
         }
-        else return kickBall(KICK_DRIBBLE, VecPosition(16,0,0));
+        if(posession() == false)
+        {
+            return kickBall(KICK_DRIBBLE,VecPosition(16,0,0));
+        }
+        else return kickBall(KICK_DRIBBLE, APF(VecPosition(16,0,0)));
     }
 
     if(worldModel->getUNum() == GOALKEEPER && playerClosestToBall == GOALKEEPER)
@@ -687,12 +701,15 @@ SkillType NaoBehavior::defenseplay()
     }
     if(ball.getDistanceTo(VecPosition(-15,0,0)) < 6 && worldModel->getUNum() == LEFT_DEF)
     {
-        return kickBall(KICK_IK,VecPosition(15,0,0));           
-        // could optimise this by making it kick in line of the path it took to reach the ball
+        VecPosition temp_target = ball;
+        temp_target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, temp_target, true/*keepDistance*/);
+        return goToTarget(temp_target);// could optimise this by making it kick in line of the path it took to reach the ball
     }
     if(ball.getDistanceTo(VecPosition(-15,0,0)) < 4 && worldModel->getUNum() == RIGHT_DEF)
     {
-        return kickBall(KICK_IK,VecPosition(15,0,0));
+        VecPosition temp_target = ball;
+        temp_target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, temp_target, true/*keepDistance*/);
+        return goToTarget(temp_target);
     }
     if(worldModel->getUNum() == GOALKEEPER)
     {
@@ -774,7 +791,7 @@ SkillType NaoBehavior::moveToOff()
     
     if(worldModel->getUNum() == LEFT_C_DEF)
     {
-        target = getposition(oppClosest(VecPosition(15,0,0)));                 
+        target = getposition(oppClosest(VecPosition(15,0,0)));     
         if(target.getDistanceTo(VecPosition(-15,0,0)) > 10)
         {
             return goToTarget(VecPosition(-10,0,0));
@@ -811,14 +828,17 @@ SkillType NaoBehavior::moveToOff()
     if (worldModel->getUNum() == GOALKEEPER)
     {   
         target = targpos[0];
+        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     }
     else if(worldModel->getUNum() == LEFT_DEF)
     {
         target = targpos[1];
+        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     }
     else if(worldModel->getUNum() == RIGHT_DEF)
     {
         target = targpos[2];
+        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, false/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
     }
     else if(worldModel->getUNum() != LEFT_C_DEF && worldModel->getUNum() != RIGHT_C_DEF)
     {
