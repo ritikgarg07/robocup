@@ -163,6 +163,7 @@ VecPosition NaoBehavior::APF(VecPosition target)
     double influence = 5;
     
     VecPosition Fatt = VecPosition(0,0,0);
+    VecPosition Fatt2 = VecPosition(0,0,0);
     VecPosition Frep = VecPosition(0,0,0);
     VecPosition Frep2 = VecPosition(0,0,0);
 
@@ -172,7 +173,9 @@ VecPosition NaoBehavior::APF(VecPosition target)
         Fatt = (worldModel->getMyPosition() - target)*(-1*katt);
     }
     else Fatt = (worldModel->getMyPosition() - target)*((1/modulus(worldModel->getMyPosition() - target))*(-8*katt/me.getDistanceTo(target)));
+    
     VecPosition Fnet = Fatt;
+
     for(int jj = WO_OPPONENT1; jj < WO_OPPONENT1 + NUM_AGENTS; ++jj)
     {
         VecPosition temp;

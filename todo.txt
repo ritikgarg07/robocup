@@ -23,12 +23,13 @@
 13) make sure BOD players don't interfere with our own kick 				Ritik 		almost done(testing left)
 26) make sure KICK_LONG etc are SKILLS (check implementation of #23)		Ritik		done	
 27) don't consider fallen players as closest								Ritik		done			
+18) add target selection in defense players 								Ritik		done (testing left)	
 
 
 10) passing
-18) add target selection in defense players 	
 19) implement dive skill for goalie	in main code	
-20) match defenders Y pos to ball even when charging						
+20) match defenders Y pos to ball even when charging
+21) modify APF						
 
 
 
