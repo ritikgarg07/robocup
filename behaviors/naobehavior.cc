@@ -335,7 +335,7 @@ void NaoBehavior::act() {
     bool resetForKickoff = pm == PM_BEFORE_KICK_OFF || pm == PM_GOAL_LEFT || pm == PM_GOAL_RIGHT;
 
 
-    if(selectSkill() != SKILL_DIVE_RIGHT || selectSkill() != SKILL_DIVE_LEFT)
+    if(selectSkill() != SKILL_DIVE_RIGHT && selectSkill() != SKILL_DIVE_LEFT)
     {
         if(checkingFall()) {
             resetSkills();
