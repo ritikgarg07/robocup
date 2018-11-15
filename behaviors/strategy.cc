@@ -86,6 +86,7 @@ void NaoBehavior::beam( double& beamX, double& beamY, double& beamAngle ) {
 
 }
 
+//returns our closest player to a position
 int NaoBehavior::ourClosest(VecPosition a)
 {
     int playerClosest = -1;
@@ -122,6 +123,7 @@ int NaoBehavior::ourClosest(VecPosition a)
     return playerClosest; 
 }
 
+//return closest opponent to a position
 int NaoBehavior::oppClosest(VecPosition a)
 {
     int playerClosest = -1;
@@ -152,6 +154,7 @@ int NaoBehavior::oppClosest(VecPosition a)
     return playerClosest; 
 }
 
+//returns position of a given player
 VecPosition NaoBehavior::getposition(int player_number)
 {
     WorldObject* player = worldModel->getWorldObject(player_number);
@@ -159,6 +162,7 @@ VecPosition NaoBehavior::getposition(int player_number)
     return temp;
 }
 
+//returns the number of opponents in a circle of radius distance, about a
 int NaoBehavior::opponentcount(VecPosition a, double distance)
 {
     int opponent_counter = 0;
@@ -182,6 +186,8 @@ int NaoBehavior::opponentcount(VecPosition a, double distance)
     }    
     return opponent_counter;    
 }
+
+
 bool NaoBehavior::posession()    // player closest distance is 0.4 , closest opponent is 0.8 and closest player is not fallen
 {
     int playerClosestToBall = ourClosest(ball);
@@ -197,6 +203,7 @@ bool NaoBehavior::posession()    // player closest distance is 0.4 , closest opp
     else return false;
 }
 
+//gives the modulus of a given function
 double NaoBehavior::modulus(VecPosition a)
 {
     if (a.getDistanceTo(VecPosition(0,0,0)) == 0)
@@ -205,6 +212,7 @@ double NaoBehavior::modulus(VecPosition a)
     }
     return VecPosition(0,0,0).getDistanceTo(a);
 }
+
 
 VecPosition NaoBehavior::ballgoal()
 {
@@ -241,6 +249,7 @@ VecPosition NaoBehavior::ballgoal()
 
     return goal_ball;
 }
+
 
 VecPosition NaoBehavior::APF(VecPosition target)
 {
@@ -296,6 +305,7 @@ VecPosition NaoBehavior::APF(VecPosition target)
     VecPosition moveto = worldModel->getMyPosition() + Fnet;
     return moveto;
 }
+
 
 SkillType NaoBehavior::selectSkill() 
 {
