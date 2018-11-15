@@ -273,4 +273,3 @@ public:
 };
 
 #endif // NAOBEHAVIOR_H
-

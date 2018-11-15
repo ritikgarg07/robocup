@@ -965,6 +965,7 @@ double NaoBehavior::cost_cal(VecPosition location)
     double dist_us_goal;                            // distance from our goal (where opp scores)
     double distance_opp_goal;                       // ^ same but from opp goal
 
+<<<<<<< Updated upstream
     double distance_opp_present;                    // distance of closest opp from the present position
     double distance_us;                             
     double speed_opp;                               // mod of speed of opp
