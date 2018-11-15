@@ -162,7 +162,10 @@ VecPosition NaoBehavior::getposition(int player_number)
     return temp;
 }
 
-//returns the number of opponents in a circle of radius distance, about a
+
+//returns the number of opponents in a circle of radius distance, about a distance d
+
+
 int NaoBehavior::opponentcount(VecPosition a, double distance)
 {
     int opponent_counter = 0;
@@ -235,18 +238,6 @@ VecPosition NaoBehavior::ballgoal()
     goal_ball.setY(pos_y + (vel_y*time_for_goal));
     goal_ball.setZ(0);
 
-    // check now implemented at the time of calling of function
-    /*
-    if(goal_ball.getY() > 1.3)
-    {
-        goal_ball.setY(1.3);
-    }
-    else if(goal_ball.getY() < -1.3)
-    {
-        goal_ball.setY(1.3);
-    }
-    */
-
     return goal_ball;
 }
 
@@ -256,8 +247,6 @@ VecPosition NaoBehavior::APF(VecPosition target)
     double katt = 5;                                // placeholder value
     double krep = 10;
     double influence = 5;
-    
-    // VecPosition obstacle = VecPosition(0,0,0);
     
     VecPosition Fatt = VecPosition(0,0,0);
     VecPosition Frep = VecPosition(0,0,0);
@@ -464,7 +453,11 @@ SkillType NaoBehavior::selectSkill()
 
 SkillType NaoBehavior::testing()
 { 
-    return SKILL_STAND;
+    if (worldModel->getUNum() == CENTRE_FORWARD && worldModel->getPlayMode() == PM_KICK_OFF_LEFT)
+    {
+        return SKILL_DIVE;
+    }
+    else return SKILL_STAND;
 }
 
 SkillType NaoBehavior::stay()
@@ -892,10 +885,13 @@ SkillType NaoBehavior::demoKickingCircle()
     {
         VecPosition temp;
         int playerNum = i - WO_TEAMMATE1 + 1;
-        if (worldModel->getUNum() == playerNum) {
+        if (worldModel->getUNum() == playerNum) 
+        {
             // This is us
             temp = worldModel->getMyPosition();
-        } else {
+        } 
+        else 
+        {
             WorldObject* teammate = worldModel->getWorldObject( i );
             if (teammate->validPosition) {
                 temp = teammate->pos;
@@ -947,14 +943,116 @@ SkillType NaoBehavior::demoKickingCircle()
         }
     }
 }
-
-
-
-
-
-VecPosition NaoBehavior::location()
+/*
+double NaoBehavior::cost_cal(VecPosition location)
 {
-    VecPosition centre = ball;
+    double cost = 0;
+    double distance_location = ball.getDistanceTo(location); 
+
+    // time taken to execute the kicks
+    double time_long;                               
+    double time_short;
+    double time_ik;
+
+    // double rotation_time;        // include later
+    
+    double ourplayers;                              // number of our players within a certain distance of the target pos of ball
+    double oppplayers;                              // ^ same but opp
+
+    double dist_us_target;                          // closest teammate's distance to approx target location       
+    double dist_opp_target;                         // ^ same but opp
+
+    double dist_us_goal;                            // distance from our goal (where opp scores)
+    double distance_opp_goal;                       // ^ same but from opp goal
+
+    double distance_opp_present;                    // distance of closest opp from the present position
+    double distance_us;                             
+    double speed_opp;                               // mod of speed of opp
+    double speed_us;
+
+    double time;
+
+    /*
+    // include later
+    VecPosition orient_closest_opp;                 // orientation of the closest opp to the kick position
+    VecPosition orient_closest_our;
+    VecPosition orient_closest_opp_present;         //orientation of closest bot to our present position
+    */
+/*
+    enum KICK
+    {
+        k_IK = 0,
+        k_FORWARD = 1,
+        k_LONG = 2,
+    };
+
+    int kick_type = 0;
+
+    if(distance_location >= 9.5)
+    {
+        kick_type = k_LONG;
+        time = time_long;
+    }        
+    else if(distance_location > 2.5 && distance_location < 9.5)
+    {
+        kick_type = k_FORWARD;
+        time = time_short;
+    }
+    else if(distance_location <= 2.5)
+    {
+        kick_type = k_IK;
+        time = time_ik;
+    }
+
+
+    // add appropriate scaling factors
+    cost = time + distance_opp_present/(speed_opp+1) + distance_opp_goal - dist_us_goal + oppplayers - ourplayers  + dist_opp_target/speed_opp - dist_us_target/speed_us;
+
+    return cost;
 }
 
 
+/*
+VecPosition NaoBehavior::location()
+{
+    VecPosition centre = ball;
+    VecPosition rotater = VecPosition(1,0,0);
+    VecPosition fav = VecPosition(0,0,0);
+
+    double distance_long = 14;
+    double distance_short = 5;
+    double distance_ik = 1.6;
+
+
+    VecPosition location[24];
+    
+    // defining positions on field which will be tested
+    for(int ii =  0; ii < 8; ii++)
+    {
+        location[ii] = centre + (rotater*distance_long).rotateAboutZ((360/8)*ii);
+    }
+
+    for(int ii =  8; ii < 16; ii++)
+    {
+        location[ii] = centre + (rotater*distance_short).rotateAboutZ((360/8)*(ii-8));
+    }
+
+    for(int ii =  16; ii < 24; ii++)
+    {
+        location[ii] = centre + (rotater*distance_ik).rotateAboutZ((360/8)*(ii-16));
+    }
+    //
+    double cost = 100000;
+    double least_cost = 0;
+    for(int jj = 0; jj < 24; jj++)
+    {
+        cost = cost_cal(location[jj]);
+        if(cost < least_cost)
+        {
+            least_cost = cost;
+            fav = location[jj];
+        }
+    }
+    return fav;
+}
+*/

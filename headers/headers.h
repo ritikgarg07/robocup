@@ -267,6 +267,8 @@ enum SkillType {
 
     SKILL_STAND,
 
+    SKILL_DIVE,
+
     SKILL_KICK_LEFT_LEG,
     SKILL_KICK_RIGHT_LEG,
 

@@ -251,7 +251,8 @@ protected:
     int oppClosest(VecPosition a);
     VecPosition APF(VecPosition target);
     VecPosition ballgoal();
-    VecPosition location()
+    VecPosition location();
+    double cost_cal(VecPosition location);
 
 
 

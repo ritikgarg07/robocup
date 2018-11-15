@@ -93,6 +93,7 @@ NaoBehavior(const std::string teamName, int uNum, const map<string, string>& nam
     try {
         readSkillsFromFile( "./skills/stand.skl" );
         readSkillsFromFile( "./skills/kick.skl" );
+        readSkillsFromFile( "./skills/dive.skl");
         switch(uNum){
             case 1: readSkillsFromFile( "./skills/kickbottype0.skl" );
                     break;
@@ -334,13 +335,15 @@ void NaoBehavior::act() {
     bool resetForKickoff = pm == PM_BEFORE_KICK_OFF || pm == PM_GOAL_LEFT || pm == PM_GOAL_RIGHT;
 
 
-
-    if(checkingFall()) {
-        resetSkills();
-        bodyModel->setUseOmniWalk(false);
-        return;
+    if(selectSkill() != SKILL_DIVE_RIGHT || selectSkill() != SKILL_DIVE_LEFT)
+    {
+        if(checkingFall()) {
+            resetSkills();
+            bodyModel->setUseOmniWalk(false);
+            return;
+        }
     }
-    else if(resetForKickoff) {
+    if(resetForKickoff) {
         if (beamablePlayMode() && (worldModel->isFallen() || worldModel->getTime() <= beamTime)) {
             initBeamed = false;
         }

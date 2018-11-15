@@ -26,7 +26,9 @@
 
 
 10) passing
-18) add target selection in defense players 	PRIORITY								
+18) add target selection in defense players 	
+19) implement dive skill for goalie	in main code	
+20) match defenders Y pos to ball even when charging						
 
 
 
