@@ -29,7 +29,8 @@
 10) passing
 19) implement dive skill for goalie	in main code	
 20) match defenders Y pos to ball even when charging
-21) modify APF						
+21) modify APF
+22) check the "exclude fallen player" in playerclosestto()						
 
 
 
