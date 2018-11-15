@@ -341,7 +341,7 @@ SkillType NaoBehavior::selectSkill()
 
     // Walk to ball while always facing forward
     // return goToTargetRelative(worldModel->g2l(ball), -worldModel->getMyAngDeg());
-    // return testing();
+    return testing();
     
     static double startTime = worldModel->getTime();    
     if(((worldModel->getPlayMode() == PM_KICK_OFF_LEFT && worldModel->getSide() == SIDE_LEFT) || (worldModel->getPlayMode() == PM_KICK_OFF_RIGHT && worldModel->getSide() == SIDE_RIGHT)))
@@ -455,7 +455,7 @@ SkillType NaoBehavior::testing()
 { 
     if (worldModel->getUNum() == CENTRE_FORWARD && worldModel->getPlayMode() == PM_KICK_OFF_LEFT)
     {
-        return SKILL_DIVE;
+        return SKILL_DIVE_RIGHT;
     }
     else return SKILL_STAND;
 }
