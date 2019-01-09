@@ -1,36 +1,10 @@
-1) use new kicks       														Ritik 		done
-2) counter-passing	(dangerous player)										Aryaman	 	done			
-3) adjust kick position based on gk position								Ritik		done
-4) wing pass(ATTACK)														Ritik		done
-5) defensive players move to ball when within a critical distance			Ritik 		done
-6) goalie logic 															Aryaman 	done
-7) defender logic															Ritik 		done
-8) get 2 kicks																Aryaman 	done
-9) kickoff setpiece, ie- kinda passing      								Aryaman 	done
-11) goalkick, player moves to target of goal  // redundant now				Aryaman 	done
-12) better marking?															Ritik		done
-14) use/test kick_ik														Ritik		done
-15) more players for attacking												Ritik		done
-16) fix player going to wing position										Ritik		done
-25) choosing what winger to pass to and when 								Ritik 		temp done
-19) APF																		Ritik		done
-22) remove players from BOD													Ritik		done
-21) Add gk behaviour(based on ball velocity)								Ritik		done
-23) in places like goalkick, or defense: change kick pos from static to 
-	dynamic based on presence of opponent 									Ritik 		done
-24) make temp static variable for opponentcount uses						Ritik		done
-28) APF testing																Ritik		done
-13) make sure BOD players don't interfere with our own kick 				Ritik 		almost done(testing left)
-26) make sure KICK_LONG etc are SKILLS (check implementation of #23)		Ritik		done	
-27) don't consider fallen players as closest								Ritik		done			
-18) add target selection in defense players 								Ritik		done (testing left)	
+test APF
 
+cost function
 
-10) passing
-19) implement dive skill for goalie	in main code	
-20) match defenders Y pos to ball even when charging
-21) modify APF
-22) check the "exclude fallen player" in playerclosestto()						
+GK dive when
+
+can we build a function to detect when a bot is kicking?
 
 
 

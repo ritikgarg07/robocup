@@ -9,7 +9,7 @@ BINARY_DIR="."
 LIBS_DIR="./libs"
 NUM_PLAYERS=11
 
-team="DrunkSoccerv4"
+team="DrunkSoccerv5"
 host="localhost"
 port=3100
 paramsfile=paramfiles/defaultParams.txt
